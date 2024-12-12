@@ -1,105 +1,66 @@
-import Cookies from "js-cookie";
-import { SESSION_USERNAME, VALID_PASSWORD, VALID_USERNAMES } from "./Constants";
+// utils/Credentials.js
+import { VALID_USERNAMES, VALID_PASSWORD, SESSION_USERNAME } from "./Constants";
 
-/**
- * Verify the credentials
- *
- * @param {string} username
- * @param {string} password
- *
- * @return {boolean}
- */
-export function verifyCredentials(username, password) {
-  if (password !== VALID_PASSWORD) {
+export const verifyCredentials = (username, password) => {
+  return VALID_USERNAMES.includes(username) && password === VALID_PASSWORD;
+};
+
+export const setCredentials = (username, password) => {
+  if (username && password) {
+    localStorage.setItem('credentials', JSON.stringify({ username, password }));
+    localStorage.setItem(SESSION_USERNAME, username);
+  }
+};
+
+export const clearCredentials = () => {
+  localStorage.removeItem('credentials');
+  localStorage.removeItem(SESSION_USERNAME);
+};
+
+// Maintain backward compatibility
+export const removeCredentials = clearCredentials;
+
+export const isLoggedIn = () => {
+  const storedUsername = localStorage.getItem(SESSION_USERNAME);
+  const storedCredentials = localStorage.getItem('credentials');
+  
+  if (!storedUsername || !storedCredentials) {
     return false;
   }
+  
+  try {
+    const { username, password } = JSON.parse(storedCredentials);
+    return Boolean(username && password && verifyCredentials(username, password));
+  } catch (e) {
+    return false;
+  }
+};
 
-  return VALID_USERNAMES.includes(username);
-}
+export const currentUser = () => {
+  return localStorage.getItem(SESSION_USERNAME) || null;
+};
 
-/**
- * Store the data in our cookies
- *
- * @param {string} username
- *
- * @param {string} password
- */
-export function setCredentials(username, password) {
-  let date = new Date();
-  date.setTime(date.getTime() + 10 * 60 * 1000);
+export const isProblemUser = () => {
+  const user = currentUser();
+  return user === 'problem_user';
+};
 
-  Cookies.set(SESSION_USERNAME, username, { expires: date });
-}
+export const isErrorUser = () => {
+  const user = currentUser();
+  return user === 'error_user';
+};
 
-/**
- * Remove the credentials
- */
-export function removeCredentials() {
-  Cookies.remove(SESSION_USERNAME);
-}
+export const isPerformanceGlitchUser = () => {
+  const user = currentUser();
+  return user === 'performance_glitch_user';
+};
 
-/**
- * Return current logged username
- *
- * @return {string | undefined}
- */
-export function currentUser() {
-  return Cookies.get(SESSION_USERNAME);
-}
+export const isVisualUser = () => {
+  const user = currentUser();
+  return user === 'visual_user';
+};
 
-/**
- * Check if this is a problem user
- *
- * @return {boolean}
- */
-export function isProblemUser() {
-  return Cookies.get(SESSION_USERNAME) === "problem_user";
-}
-
-/**
- * Check if this is a performance user
- *
- * @return {boolean}
- */
-export function isPerformanceGlitchUser() {
-  return Cookies.get(SESSION_USERNAME) === "performance_glitch_user";
-}
-
-/**
- * Check if this a logged out user
- *
- * @return {boolean}
- */
-export function isLockedOutUser() {
-  return Cookies.get(SESSION_USERNAME) === "locked_out_user";
-}
-
-/**
- * Check if this is an error user
- *
- * @return {boolean}
- */
-export function isErrorUser() {
-  return Cookies.get(SESSION_USERNAME) === "error_user";
-}
-
-/**
- * Check if the user is logged in with a valid username
- *
- * @return {boolean}
- */
-export function isLoggedIn() {
-  const sessionUsername = Cookies.get(SESSION_USERNAME);
-  const isValidUsername = VALID_USERNAMES.includes(sessionUsername);
-
-  return isValidUsername && sessionUsername !== "locked_out_user";
-}
-
-/**
- * Check if this is a visual user
- *
- * @return {boolean}
- */
-export function isVisualUser() {
-  return Cookies.get(SESSION_USERNAME) === "visual_user";
-}
+export const isLockedOutUser = () => {
+  const user = currentUser();
+  return user === 'locked_out_user';
+};

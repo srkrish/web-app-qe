@@ -1,79 +1,89 @@
 export class ShoppingCart {
+  static LISTENERS = [];
+
   static addItem(itemId) {
-    // pull out our current cart contents
+    console.log('Adding item to cart:', itemId);
     const curContents = ShoppingCart.getCartContents();
+    console.log('Current contents before add:', curContents);
 
-    /* istanbul ignore else */
     if (curContents.indexOf(itemId) < 0) {
-      // Item's not yet present - add it now
       curContents.push(itemId);
-
-      // We modified our cart, so store it now
+      console.log('New contents after add:', curContents);
       ShoppingCart.setCartContents(curContents);
     }
   }
 
   static removeItem(itemId) {
-    // pull out our current cart contents
+    console.log('ShoppingCart: Removing item:', itemId);
     const curContents = ShoppingCart.getCartContents();
-    const itemIndex = curContents.indexOf(itemId);
-
-    /* istanbul ignore else */
-    if (itemIndex >= 0) {
-      // Remove this item from the array
-      curContents.splice(itemIndex, 1);
-
-      // We modified our cart, so store it now
-      ShoppingCart.setCartContents(curContents);
-    }
+    // Filter out the item with matching id
+    const updatedContents = curContents.filter(item => 
+      typeof item === 'object' ? item.id !== itemId : item !== itemId
+    );
+    
+    console.log('ShoppingCart: Updated contents:', updatedContents);
+    ShoppingCart.setCartContents(updatedContents);
+    
+    // Ensure listeners are notified
+    ShoppingCart.LISTENERS.forEach(listener => {
+      if (listener && typeof listener.forceUpdate === 'function') {
+        listener.forceUpdate();
+      }
+    });
   }
 
   static isItemInCart(itemId) {
-    // pull out our current cart contents
     const curContents = ShoppingCart.getCartContents();
-
-    // If the item is in the array, return true
-    return curContents.indexOf(itemId) >= 0;
+    const isIn = curContents.indexOf(itemId) >= 0;
+    console.log('Checking if item in cart:', itemId, isIn);
+    return isIn;
   }
 
   static getCartContents() {
-    // pull out our current cart contents
     let curContents = window.localStorage.getItem("cart-contents");
+    console.log('Raw cart contents from storage:', curContents);
 
-    // Make an empty list if this is the first item
     if (curContents == null) {
       curContents = [];
     } else {
-      // We have an existing cart, so deserialize it now since localStorage stores in JSON strings
       curContents = JSON.parse(curContents);
     }
-
+    console.log('Parsed cart contents:', curContents);
     return curContents;
   }
 
   static setCartContents(newContents) {
+    console.log('Setting cart contents:', newContents);
     window.localStorage.setItem("cart-contents", JSON.stringify(newContents));
-
-    // Notify our listeners
-    /* istanbul ignore next */
-    ShoppingCart.LISTENERS.forEach((curListener) => {
-      curListener.forceUpdate();
-    });
+    ShoppingCart.notifyListeners();
   }
 
   static resetCart() {
+    console.log('Resetting cart');
     window.localStorage.removeItem("cart-contents");
+    ShoppingCart.notifyListeners();
+  }
 
-    // Notify our listeners
-    /* istanbul ignore next */
-    ShoppingCart.LISTENERS.forEach((curListener) => {
-      curListener.forceUpdate();
+  static notifyListeners() {
+    console.log('Notifying listeners:', ShoppingCart.LISTENERS.length);
+    ShoppingCart.LISTENERS.forEach((listener) => {
+      if (listener && typeof listener.forceUpdate === 'function') {
+        listener.forceUpdate();
+      }
     });
   }
 
   static registerCartListener(handler) {
-    ShoppingCart.LISTENERS.push(handler);
+    console.log('Registering cart listener');
+    if (handler && typeof handler.forceUpdate === 'function') {
+      ShoppingCart.LISTENERS.push(handler);
+    }
+  }
+
+  static removeCartListener(handler) {
+    console.log('Removing cart listener');
+    ShoppingCart.LISTENERS = ShoppingCart.LISTENERS.filter(
+      (listener) => listener !== handler
+    );
   }
 }
-
-ShoppingCart.LISTENERS = [];

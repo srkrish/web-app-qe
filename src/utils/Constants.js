@@ -10,13 +10,13 @@ export const VALID_USERNAMES = [
 export const VALID_PASSWORD = "secret_sauce";
 export const ROUTES = {
   LOGIN: "/",
-  INVENTORY: "/inventory.html",
-  INVENTORY_LONG: "/inventory-long.html",
-  INVENTORY_LIST: "/inventory-item.html",
-  CART: "/cart.html",
-  CHECKOUT_STEP_ONE: "/checkout-step-one.html",
-  CHECKOUT_STEP_TWO: "/checkout-step-two.html",
-  CHECKOUT_COMPLETE: "/checkout-complete.html",
+  INVENTORY: "/inventory",
+  INVENTORY_LONG: "/inventory-long",
+  INVENTORY_LIST: "/inventory-item",
+  CART: "/cart",
+  CHECKOUT_STEP_ONE: "/checkout-step-one",
+  CHECKOUT_STEP_TWO: "/checkout-step-two",
+  CHECKOUT_COMPLETE: "/checkout-complete",
 };
 export const CART_CONTENTS = "cart-contents";
 export const SESSION_USERNAME = "session-username";
