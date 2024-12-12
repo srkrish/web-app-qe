@@ -7,7 +7,7 @@ import "react-app-polyfill/stable";
 import { BacktraceClient, ErrorBoundary } from "@backtrace-labs/react";
 import React from "react";
 import ReactDOM from "react-dom";
-import { Route, BrowserRouter as Router } from "react-router-dom";
+import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 import "./index.css";
 import Cart from "./pages/Cart";
@@ -37,20 +37,41 @@ BacktraceClient.initialize({
 const routing = (
   <ErrorBoundary>
     <Router>
-      <Route exact path={ROUTES.LOGIN} component={Login} />
-      <PrivateRoute path={ROUTES.INVENTORY} component={(props) => <Inventory data={InventoryData} {...props}/>} />
-      <PrivateRoute path={ROUTES.INVENTORY_LONG} component={(props) => <Inventory data={InventoryDataLong} {...props}/>} />
-      <PrivateRoute path={ROUTES.INVENTORY_LIST} component={InventoryItem} />
-      <PrivateRoute path={ROUTES.CART} component={Cart} />
-      <PrivateRoute
-        path={ROUTES.CHECKOUT_STEP_ONE}
-        component={CheckOutStepOne}
-      />
-      <PrivateRoute
-        path={ROUTES.CHECKOUT_STEP_TWO}
-        component={CheckOutStepTwo}
-      />
-      <PrivateRoute path={ROUTES.CHECKOUT_COMPLETE} component={Finish} />
+      <Routes>
+        <Route path={ROUTES.LOGIN} element={<Login />} />
+        
+        {/* Protected Routes */}
+        <Route element={<PrivateRoute />}>
+          <Route 
+            path={ROUTES.INVENTORY} 
+            element={<Inventory data={InventoryData} />} 
+          />
+          <Route 
+            path={ROUTES.INVENTORY_LONG} 
+            element={<Inventory data={InventoryDataLong} />} 
+          />
+          <Route 
+            path={ROUTES.INVENTORY_LIST} 
+            element={<InventoryItem />} 
+          />
+          <Route 
+            path={ROUTES.CART} 
+            element={<Cart />} 
+          />
+          <Route 
+            path={ROUTES.CHECKOUT_STEP_ONE} 
+            element={<CheckOutStepOne />} 
+          />
+          <Route 
+            path={ROUTES.CHECKOUT_STEP_TWO} 
+            element={<CheckOutStepTwo />} 
+          />
+          <Route 
+            path={ROUTES.CHECKOUT_COMPLETE} 
+            element={<Finish />} 
+          />
+        </Route>
+      </Routes>
     </Router>
   </ErrorBoundary>
 );
