@@ -1,52 +1,56 @@
 import React, { useEffect, useState } from "react";
-import { withRouter } from "react-router-dom";
-import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 import { ShoppingCart } from "../utils/shopping-cart";
 import { ROUTES } from "../utils/Constants";
 import "./CartButton.css";
 
-const CartButton = (props) => {
-  const { history } = props;
-  let cartBadge = "";
-  const [cartContents, setCartContents] = useState(
-    ShoppingCart.getCartContents()
-  );
-  // Strangely enough this is being called, but not covered in the report
-  /* istanbul ignore next */
-  const cartListener = {
-    forceUpdate: () => setCartContents(ShoppingCart.getCartContents()),
-  };
+const CartButton = () => {
+  const navigate = useNavigate();
+  const [cartContents, setCartContents] = useState(() => {
+    console.log('CartButton: Initializing cart contents');
+    return ShoppingCart.getCartContents();
+  });
 
   useEffect(() => {
+    console.log('CartButton: Setting up cart listener');
+    const cartListener = {
+      forceUpdate: () => {
+        console.log('CartButton: Cart updated, refreshing');
+        const contents = ShoppingCart.getCartContents();
+        console.log('CartButton: New contents:', contents);
+        setCartContents(contents);
+      }
+    };
+
     ShoppingCart.registerCartListener(cartListener);
+
+    return () => {
+      console.log('CartButton: Cleaning up listener');
+      ShoppingCart.LISTENERS = ShoppingCart.LISTENERS.filter(l => l !== cartListener);
+    };
   }, []);
 
-  if (cartContents.length > 0) {
-    cartBadge = (
-      <span className="shopping_cart_badge" data-test="shopping-cart-badge">
-        {cartContents.length}
-      </span>
-    );
-  }
+  const itemCount = Array.isArray(cartContents) ? cartContents.length : 0;
 
   return (
-    <a
+    <a 
       className="shopping_cart_link"
-      onClick={() => history.push(ROUTES.CART)}
+      href="#"
+      onClick={(evt) => {
+        evt.preventDefault();
+        navigate(ROUTES.CART);
+      }}
       data-test="shopping-cart-link"
     >
-      {cartBadge}
+      {itemCount > 0 && (
+        <span className="shopping_cart_badge" data-test="shopping-cart-badge">
+          {itemCount}
+        </span>
+      )}
+      <span className="shopping_cart_label">Cart</span>
     </a>
   );
 };
 
-CartButton.propTypes = {
-  /**
-   * The history
-   */
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-};
-
-export default withRouter(CartButton);
+// Make sure to add this line
+export default CartButton;
