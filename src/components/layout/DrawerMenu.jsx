@@ -2,17 +2,17 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { slide as Menu } from "react-burger-menu";
-import { ShoppingCart } from "../utils/shopping-cart";
-import { ROUTES } from "../utils/Constants";
+import { ShoppingCart } from "utils/shopping-cart";
+import { ROUTES } from "utils/Constants";
 import {
   isProblemUser,
   isVisualUser,
   removeCredentials,
-} from "../utils/Credentials";
-import menuClosePng from "../assets/img/close.png";
-import menuCloseSvg from "../assets/svg/close@3x.svg";
-import menuIconPng from "../assets/img/menu.png";
-import menuIconSvg from "../assets/svg/menu3x.svg";
+} from "utils/Credentials";
+import menuClosePng from "assets/img/close.png";
+import menuCloseSvg from "assets/svg/close@3x.svg";
+import menuIconPng from "assets/img/menu.png";
+import menuIconSvg from "assets/svg/menu3x.svg";
 import "./DrawerMenu.css";
 
 const DrawerMenu = () => {

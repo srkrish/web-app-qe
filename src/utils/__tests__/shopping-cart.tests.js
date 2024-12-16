@@ -1,4 +1,4 @@
-import { ShoppingCart } from "../../utils/shopping-cart";
+import { ShoppingCart } from "../utils/shopping-cart";
 
 describe("shopping-cart", () => {
   beforeEach(() => {

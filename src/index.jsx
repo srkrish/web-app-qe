@@ -8,7 +8,7 @@ import { BacktraceClient, ErrorBoundary } from "@backtrace-labs/react";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Routes, Route, BrowserRouter as Router, Navigate } from "react-router-dom";
-import PrivateRoute from "./components/PrivateRoute";
+import PrivateRoute from "components/auth/PrivateRoute";
 import "./index.css";
 import Cart from "./pages/Cart";
 import CheckOutStepOne from "./pages/CheckOutStepOne";
@@ -18,11 +18,11 @@ import Inventory from "./pages/Inventory";
 import InventoryItem from "./pages/InventoryItem";
 import Login from "./pages/Login";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
-import { ROUTES } from "./utils/Constants";
-import { currentUser } from "./utils/Credentials";
-import { ShoppingCart } from "./utils/shopping-cart";
-import { InventoryData } from "./utils/InventoryData.js";
-import { InventoryDataLong } from "./utils/InventoryDataLong.js";
+import { ROUTES } from "utils/Constants";
+import { currentUser } from "utils/Credentials";
+import { ShoppingCart } from "utils/shopping-cart";
+import { InventoryData } from "utils/InventoryData.js";
+import { InventoryDataLong } from "utils/InventoryDataLong.js";
 
 BacktraceClient.initialize({
   name: "Swag Store",

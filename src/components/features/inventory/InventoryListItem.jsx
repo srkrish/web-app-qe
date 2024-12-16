@@ -1,11 +1,11 @@
 import React, { useState, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import { ShoppingCart } from "../utils/shopping-cart";
-import { isErrorUser, isProblemUser } from "../utils/Credentials";
+import { ShoppingCart } from "utils/shopping-cart";
+import { isErrorUser, isProblemUser } from "utils/Credentials";
 import "./InventoryListItem.css";
-import { ROUTES } from "../utils/Constants";
-import Button, { BUTTON_SIZES, BUTTON_TYPES } from "./Button";
+import { ROUTES } from "utils/Constants";
+import Button, { BUTTON_SIZES, BUTTON_TYPES } from "components/common/Button";
 
 // Move ButtonType outside the component
 const ButtonType = memo(({ id, item, itemInCart, missAlignButton, onAdd, onRemove }) => {
@@ -119,7 +119,7 @@ const InventoryListItem = memo((props) => {
           <img
             alt={name}
             className="inventory_item_img"
-            src={require(`../assets/img/${image_url}`).default}
+            src={require(`assets/img/${image_url}`).default}
             data-test={`inventory-item-${name
               .replace(/\s+/g, "-")
               .toLowerCase()}-img`}

@@ -1,7 +1,7 @@
 import React from "react";
 import { shallow } from "enzyme";
 import HeaderContainer from "../HeaderContainer";
-import * as Credentials from "../../utils/Credentials";
+import * as Credentials from "../utils/Credentials";
 
 describe("HeaderContainer", () => {
   it("should render without any props", () => {

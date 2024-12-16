@@ -35,13 +35,13 @@
   height: 30px;
 }
 .social_twitter {
-  background: url("../assets/img/twitter.png") no-repeat;
+  background: url("assets/img/twitter.png") no-repeat;
 }
 .social_facebook {
-  background: url("../assets/img/facebook.png") no-repeat;
+  background: url("assets/img/facebook.png") no-repeat;
 }
 .social_linkedin {
-  background: url("../assets/img/linkedIn.png") no-repeat;
+  background: url("assets/img/linkedIn.png") no-repeat;
 }
 
 .social a {

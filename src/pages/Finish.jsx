@@ -1,10 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Checkmark from "../assets/img/checkmark.png";
-import SwagLabsFooter from "../components/Footer";
-import HeaderContainer from "../components/HeaderContainer";
-import Button, { BUTTON_SIZES } from "../components/Button";
-import { ROUTES } from "../utils/Constants";
+import SwagLabsFooter from "components/layout/Footer";
+import HeaderContainer from "components/layout/HeaderContainer";
+import Button, { BUTTON_SIZES } from "components/common/Button";
+import { ROUTES } from "utils/Constants";
 import "./Finish.css";
 
 const Finish = () => {

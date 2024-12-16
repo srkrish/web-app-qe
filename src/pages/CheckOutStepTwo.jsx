@@ -1,13 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { isErrorUser, isProblemUser } from "../utils/Credentials";
-import { ROUTES } from "../utils/Constants";
-import { ShoppingCart } from "../utils/shopping-cart";
-import { InventoryData } from "../utils/InventoryData";
-import CartItem from "../components/CartItem";
-import SwagLabsFooter from "../components/Footer";
-import HeaderContainer from "../components/HeaderContainer";
-import Button, { BUTTON_SIZES, BUTTON_TYPES } from "../components/Button";
+import { isErrorUser, isProblemUser } from "utils/Credentials";
+import { ROUTES } from "utils/Constants";
+import { ShoppingCart } from "utils/shopping-cart";
+import { InventoryData } from "utils/InventoryData";
+import CartItem from "components/features/cart/CartItem";
+import SwagLabsFooter from "components/layout/Footer";
+import HeaderContainer from "components/layout/HeaderContainer";
+import Button, { BUTTON_SIZES, BUTTON_TYPES } from "components/common/Button";
 import "./CheckOutStepTwo.css";
 
 const CheckOutStepTwo = () => {

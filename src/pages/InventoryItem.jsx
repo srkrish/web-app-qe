@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { isProblemUser, isErrorUser } from "../utils/Credentials";
-import { ROUTES } from "../utils/Constants";
-import { ShoppingCart } from "../utils/shopping-cart";
-import { InventoryData } from "../utils/InventoryData";
-import HeaderContainer from "../components/HeaderContainer";
-import Button, { BUTTON_SIZES, BUTTON_TYPES } from "../components/Button";
-import SwagLabsFooter from "../components/Footer";
+import { isProblemUser, isErrorUser } from "utils/Credentials";
+import { ROUTES } from "utils/Constants";
+import { ShoppingCart } from "utils/shopping-cart";
+import { InventoryData } from "utils/InventoryData";
+import HeaderContainer from "components/layout/HeaderContainer";
+import Button, { BUTTON_SIZES, BUTTON_TYPES } from "components/common/Button";
+import SwagLabsFooter from "components/layout/Footer";
 import "./InventoryItem.css";
-import BrokenComponent from "../components/BrokenComponent";
-import { ErrorBoundary } from "@backtrace-labs/react";
 
 const InventoryItem = () => {
   const navigate = useNavigate();

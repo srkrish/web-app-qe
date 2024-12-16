@@ -1,14 +1,14 @@
 import React, { useState as useStateMock } from "react";
 import { shallow } from "enzyme";
 import CartButton from "../CartButton";
-import { ShoppingCart } from "../../utils/shopping-cart";
+import { ShoppingCart } from "../utils/shopping-cart";
 
 jest.mock("react", () => ({
   ...jest.requireActual("react"),
   useState: jest.fn(),
   useEffect: (f) => f(),
 }));
-jest.mock("../../utils/shopping-cart");
+jest.mock("../utils/shopping-cart");
 
 let props;
 

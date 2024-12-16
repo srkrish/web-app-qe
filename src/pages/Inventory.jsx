@@ -4,12 +4,12 @@ import {
   isPerformanceGlitchUser,
   isProblemUser,
   isVisualUser,
-} from "../utils/Credentials";
-import InventoryListItem from "../components/InventoryListItem";
-import SwagLabsFooter from "../components/Footer";
-import HeaderContainer from "../components/HeaderContainer";
-import { sortAsc, sortDesc, sortHiLo, sortLoHi } from "../utils/Sorting";
-import Select from "../components/Select";
+} from "utils/Credentials";
+import InventoryListItem from "components/features/inventory/InventoryListItem";
+import SwagLabsFooter from "components/layout/Footer";
+import HeaderContainer from "components/layout/HeaderContainer";
+import { sortAsc, sortDesc, sortHiLo, sortLoHi } from "utils/Sorting";
+import Select from "components/common/Select";
 import "./Inventory.css";
 import { BacktraceClient } from "@backtrace-labs/react";
 

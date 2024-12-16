@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { isLoggedIn } from "../utils/Credentials";
-import { ROUTES } from "../utils/Constants";
+import { isLoggedIn } from "utils/Credentials";
+import { ROUTES } from "utils/Constants";
 
 const PrivateRoute = () => {
   const authenticated = isLoggedIn();

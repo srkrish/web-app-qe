@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ShoppingCart } from "../utils/shopping-cart";
-import { ROUTES } from "../utils/Constants";
+import { ShoppingCart } from "utils/shopping-cart";
+import { ROUTES } from "utils/Constants";
 import "./CartButton.css";
 
 const CartButton = () => {

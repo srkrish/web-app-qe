@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { isProblemUser, isErrorUser } from "../utils/Credentials";
-import { ROUTES } from "../utils/Constants";
-import SwagLabsFooter from "../components/Footer";
-import HeaderContainer from "../components/HeaderContainer";
-import InputError, { INPUT_TYPES } from "../components/InputError";
-import ErrorMessage from "../components/ErrorMessage";
+import { isProblemUser, isErrorUser } from "utils/Credentials";
+import { ROUTES } from "utils/Constants";
+import SwagLabsFooter from "components/layout/Footer";
+import HeaderContainer from "components/layout/HeaderContainer";
+import InputError, { INPUT_TYPES } from "components/forms/InputError";
+import ErrorMessage from "components/common/ErrorMessage";
 import "./CheckOutStepOne.css";
 
 const CheckOutStepOne = () => {

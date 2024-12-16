@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import { isProblemUser } from "../utils/Credentials";
-import { ROUTES } from "../utils/Constants";
-import { ShoppingCart } from "../utils/shopping-cart";
-import Button, { BUTTON_SIZES, BUTTON_TYPES } from "./Button";
-import "./CartItem.css";
+import { isProblemUser } from "utils/Credentials";
+import { ROUTES } from "utils/Constants";
+import { ShoppingCart } from "utils/shopping-cart";
+import Button, { BUTTON_SIZES, BUTTON_TYPES } from "components/common/Button";
+import "components/features/cart/CartItem.css";
 
 const CartItem = ({ item, showButton }) => {
   console.log('CartItem rendering', { item });

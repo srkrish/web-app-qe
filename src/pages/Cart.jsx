@@ -1,13 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { ROUTES } from "../utils/Constants";
-import { ShoppingCart } from "../utils/shopping-cart";
-import CartItem from "../components/CartItem";
-import SwagLabsFooter from "../components/Footer";
-import HeaderContainer from "../components/HeaderContainer";
-import Button, { BUTTON_SIZES, BUTTON_TYPES } from "../components/Button";
+import { ROUTES } from "utils/Constants";
+import { ShoppingCart } from "utils/shopping-cart";
+import CartItem from "components/features/cart/CartItem";
+import SwagLabsFooter from "components/layout/Footer";
+import HeaderContainer from "components/layout/HeaderContainer";
+import Button, { BUTTON_SIZES, BUTTON_TYPES } from "components/common/Button";
 import "./Cart.css";
-import { isVisualUser } from "../utils/Credentials";
+import { isVisualUser } from "utils/Credentials";
 
 const Cart = () => {
   console.log('Cart component rendering');

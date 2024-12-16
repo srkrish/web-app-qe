@@ -1,9 +1,9 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
 import "./HeaderContainer.css";
-import DrawerMenu from "./DrawerMenu";
-import CartButton from "./CartButton";
-import { isVisualUser } from "../utils/Credentials";
+import DrawerMenu from "components/layout/DrawerMenu";
+import CartButton from "components/features/cart/CartButton";
+import { isVisualUser } from "utils/Credentials";
 
 // Move component definitions outside
 const LeftComponent = memo(({ leftComponent }) => (

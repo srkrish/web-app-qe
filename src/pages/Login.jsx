@@ -6,11 +6,11 @@ import {
   isLockedOutUser,
   setCredentials,
   verifyCredentials,
-} from "../utils/Credentials";
-import { ROUTES, VALID_USERNAMES, VALID_PASSWORD } from "../utils/Constants";
-import InputError, { INPUT_TYPES } from "../components/InputError";
-import SubmitButton from "../components/SubmitButton";
-import ErrorMessage from "../components/ErrorMessage";
+} from "utils/Credentials";
+import { ROUTES, VALID_USERNAMES, VALID_PASSWORD } from "utils/Constants";
+import InputError, { INPUT_TYPES } from "components/forms/InputError";
+import SubmitButton from "components/forms/SubmitButton";
+import ErrorMessage from "components/common/ErrorMessage";
 import { BacktraceClient } from "@backtrace-labs/react";
 
 function Login() {

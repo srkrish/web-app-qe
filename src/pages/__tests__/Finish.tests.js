@@ -2,7 +2,7 @@ import React from "react";
 import { shallow } from "enzyme";
 import Finish from "../Finish";
 
-jest.mock("../../utils/shopping-cart");
+jest.mock("../utils/shopping-cart");
 
 let props;
 

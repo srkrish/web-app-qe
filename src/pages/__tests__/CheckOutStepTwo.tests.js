@@ -1,10 +1,10 @@
 import React from "react";
 import { shallow } from "enzyme";
 import CheckOutStepTwo from "../CheckOutStepTwo";
-import { ShoppingCart } from "../../utils/shopping-cart";
-import * as Credentials from "../../utils/Credentials";
+import { ShoppingCart } from "../utils/shopping-cart";
+import * as Credentials from "../utils/Credentials";
 
-jest.mock("../../utils/shopping-cart");
+jest.mock("../utils/shopping-cart");
 
 let props;
 
