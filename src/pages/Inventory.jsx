@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { withRouter } from "react-router-dom";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import {
   isErrorUser,
   isPerformanceGlitchUser,
@@ -14,89 +13,116 @@ import Select from "../components/Select";
 import "./Inventory.css";
 import { BacktraceClient } from "@backtrace-labs/react";
 
-const Inventory = ({data}) => {
-  const InventoryData = data;
-  const [inventoryList, setInventoryList] = useState(
-    sortAsc(InventoryData, "name")
-  );
-  const [activeOption, setActiveOption] = useState("az");
-  /* istanbul ignore next */
-  const startPerformanceGlitch = (duration) => {
-    const start = new Date().getTime();
-    while (new Date().getTime() < start + duration) {
-      // PageLoad increases
-    }
-  };
-  const isVisualFailure = isVisualUser();
-  const randomPrice = () => Math.round(Math.random() * 10000) / 100;
+const Inventory = ({ data }) => {
+  console.log('===== Inventory Render Start =====');
+  console.log('Data length:', data?.length);
+  console.log('First data item:', data?.[0]);
 
-  /* istanbul ignore next */
-  if (isPerformanceGlitchUser()) {
-    startPerformanceGlitch(5000);
-  }
+  // Initialize state with logging
+  const [inventoryList, setInventoryList] = useState(() => {
+    console.log('Initializing inventoryList with data:', data?.length);
+    return sortAsc(data, "name");
+  });
+  
+  const [activeOption, setActiveOption] = useState(() => {
+    console.log('Initializing activeOption');
+    return "az";
+  });
 
-  /**
-   * @TODO:
-   * This can't be tested yet because enzyme currently doesn't support ReactJS17,
-   * see https://github.com/enzymejs/enzyme/issues/2429.
-   * This means we can't fully mount the component and test all rendered components
-   * and functions
-   */
-  /* istanbul ignore next */
-  const sortByOption = (event) => {
+  useEffect(() => {
+    console.log('Inventory mounted');
+    return () => {
+      console.log('Inventory unmounting');
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log('inventoryList updated:', inventoryList?.length);
+  }, [inventoryList]);
+
+  // Memoize the options array
+  const sortOptions = useMemo(() => {
+    console.log('Creating sortOptions');
+    return [
+      { key: "az", value: "Name (A to Z)" },
+      { key: "za", value: "Name (Z to A)" },
+      { key: "lohi", value: "Price (low to high)" },
+      { key: "hilo", value: "Price (high to low)" },
+    ];
+  }, []);
+
+  const sortByOption = useCallback((event) => {
+    console.log('sortByOption called with:', event.target.value);
+    
     if (isProblemUser()) {
-      // Bail out now if we're problem user so that we have a behaviour which is broken in Chrome only for sort.
-      // select option onclick is not supported in Chrome but works in IE and FF
+      console.log('Problem user detected, returning');
       return;
     } else if (isErrorUser()) {
-      // Send an error with custom attributes to Backtrace
+      console.log('Error user detected, sending error report');
       BacktraceClient.instance.send("Sorting is broken!", {
         sortOption: event.target.value,
-        InventoryData,
+        data,
       });
       return alert(
         "Sorting is broken! This error has been reported to Backtrace."
       );
     }
 
-    setActiveOption(event.target.value);
+    const newOption = event.target.value;
+    console.log('Setting new activeOption:', newOption);
+    setActiveOption(newOption);
 
-    switch (event.target.value) {
+    console.log('Sorting inventory list by:', newOption);
+    switch (newOption) {
       case "az":
-        setInventoryList(sortAsc(InventoryData, "name"));
+        setInventoryList(sortAsc(data, "name"));
         break;
       case "za":
-        setInventoryList(sortDesc(InventoryData, "name"));
+        setInventoryList(sortDesc(data, "name"));
         break;
       case "hilo":
-        setInventoryList(sortHiLo(InventoryData, "price"));
+        setInventoryList(sortHiLo(data, "price"));
         break;
       case "lohi":
-        setInventoryList(sortLoHi(InventoryData, "price"));
+        setInventoryList(sortLoHi(data, "price"));
         break;
       default:
-        return;
+        console.log('Unknown sort option:', newOption);
+        break;
     }
-  };
+  }, [data]);
 
+  // Memoize the Select component
+  console.log('About to create sortSelect');
+  const sortSelect = useMemo(() => {
+    console.log('Creating sortSelect component');
+    return (
+      <Select
+        activeOption={activeOption}
+        options={sortOptions}
+        onChange={sortByOption}
+        testId="product-sort-container"
+      />
+    );
+  }, [activeOption, sortOptions, sortByOption]);
+  console.log('sortSelect created');
+
+  // Handle performance glitch
+  if (isPerformanceGlitchUser()) {
+    console.log('Performance glitch user detected');
+    const start = new Date().getTime();
+    while (new Date().getTime() < start + 5000) {
+      // PageLoad increases
+    }
+  }
+
+  console.log('About to render HeaderContainer');
   return (
     <div id="page_wrapper" className="page_wrapper">
       <div id="contents_wrapper">
         <HeaderContainer
           secondaryTitle="Products"
-          secondaryRightComponent={
-            <Select
-              activeOption={activeOption}
-              options={[
-                { key: "az", value: "Name (A to Z)" },
-                { key: "za", value: "Name (Z to A)" },
-                { key: "lohi", value: "Price (low to high)" },
-                { key: "hilo", value: "Price (high to low)" },
-              ]}
-              onChange={sortByOption}
-              testId="product-sort-container"
-            />
-          }
+          secondaryRightComponent={sortSelect}
         />
         <div id="inventory_container">
           <div>
@@ -107,20 +133,21 @@ const Inventory = ({data}) => {
             >
               <div className="inventory_list" data-test="inventory-list">
                 {inventoryList.map((item, i) => {
+                  console.log('Rendering item:', item.id);
                   return (
                     <InventoryListItem
                       key={item.id}
                       id={item.id}
+                      name={item.name}
+                      desc={item.desc}
+                      price={item.price}
                       image_url={
-                        isProblemUser() || (isVisualFailure && i === 0)
+                        isProblemUser() || (isVisualUser() && i === 0)
                           ? "sl-404.jpg"
                           : item.image_url
                       }
-                      name={item.name}
-                      desc={item.desc}
-                      price={isVisualFailure ? randomPrice() : item.price}
-                      isTextAlignRight={isVisualFailure && i > 1 && i < 4}
-                      missAlignButton={isVisualFailure && i === 5}
+                      isTextAlignRight={isVisualUser() && i > 1 && i < 4}
+                      missAlignButton={isVisualUser() && i === 5}
                     />
                   );
                 })}
@@ -134,4 +161,4 @@ const Inventory = ({data}) => {
   );
 };
 
-export default withRouter(Inventory);
+export default Inventory;

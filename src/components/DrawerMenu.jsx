@@ -1,5 +1,5 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { slide as Menu } from "react-burger-menu";
 import { ShoppingCart } from "../utils/shopping-cart";
@@ -15,11 +15,18 @@ import menuIconPng from "../assets/img/menu.png";
 import menuIconSvg from "../assets/svg/menu3x.svg";
 import "./DrawerMenu.css";
 
-const DrawerMenu = ({ history }) => {
+const DrawerMenu = () => {
+  const navigate = useNavigate();
+
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
+
   const resetStorage = () => {
     // Wipe out our shopping cart now
     ShoppingCart.resetCart();
   };
+
   const aboutLink = isProblemUser()
     ? "https://saucelabs.com/error/404"
     : "https://saucelabs.com/";
@@ -56,7 +63,7 @@ const DrawerMenu = ({ history }) => {
         href="#"
         onClick={(evt) => {
           evt.preventDefault();
-          history.push(ROUTES.INVENTORY);
+          handleNavigation(ROUTES.INVENTORY);
         }}
         data-test="inventory-sidebar-link"
       >
@@ -77,7 +84,7 @@ const DrawerMenu = ({ history }) => {
         onClick={(evt) => {
           evt.preventDefault();
           removeCredentials();
-          history.push(ROUTES.LOGIN);
+          handleNavigation(ROUTES.LOGIN);
         }}
         data-test="logout-sidebar-link"
       >
@@ -98,13 +105,5 @@ const DrawerMenu = ({ history }) => {
     </Menu>
   );
 };
-DrawerMenu.propTypes = {
-  /**
-   * The history
-   */
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-};
 
-export default withRouter(DrawerMenu);
+export default DrawerMenu;

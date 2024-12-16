@@ -1,51 +1,38 @@
-import React from "react";
+import React, { memo } from "react";
 import PropTypes from "prop-types";
 import "./HeaderContainer.css";
 import DrawerMenu from "./DrawerMenu";
 import CartButton from "./CartButton";
 import { isVisualUser } from "../utils/Credentials";
 
-const HeaderContainer = ({
+// Move component definitions outside
+const LeftComponent = memo(({ leftComponent }) => (
+  <div className="left_component">{leftComponent}</div>
+));
+
+const RightComponent = memo(({ rightComponent }) => (
+  <div className="right_component">{rightComponent}</div>
+));
+
+const Title = memo(({ title }) => (
+  <span className="title" data-test="title">
+    {title}
+  </span>
+));
+
+const HeaderContainer = memo(({
   customClass,
   secondaryLeftComponent,
   secondaryRightComponent,
   secondaryTitle,
 }) => {
-  /**
-   * @TODO:
-   * This can't be tested yet because enzyme currently doesn't support ReactJS17,
-   * see https://github.com/enzymejs/enzyme/issues/2429.
-   * This means we can't fully mount the component and test all rendered components
-   * and functions
-   */
-  /* istanbul ignore next */
-  const LeftComponent = ({ leftComponent }) => (
-    <div className="left_component">{React.cloneElement(leftComponent)}</div>
-  );
-  /**
-   * @TODO:
-   * This can't be tested yet because enzyme currently doesn't support ReactJS17,
-   * see https://github.com/enzymejs/enzyme/issues/2429.
-   * This means we can't fully mount the component and test all rendered components
-   * and functions
-   */
-  /* istanbul ignore next */
-  const RightComponent = ({ rightComponent }) => (
-    <div className="right_component">{React.cloneElement(rightComponent)}</div>
-  );
-  /**
-   * @TODO:
-   * This can't be tested yet because enzyme currently doesn't support ReactJS17,
-   * see https://github.com/enzymejs/enzyme/issues/2429.
-   * This means we can't fully mount the component and test all rendered components
-   * and functions
-   */
-  /* istanbul ignore next */
-  const Title = ({ title }) => (
-    <span className="title" data-test="title">
-      {title}
-    </span>
-  );
+  console.log('HeaderContainer render called with props:', {
+    customClass,
+    hasLeftComponent: !!secondaryLeftComponent,
+    hasRightComponent: !!secondaryRightComponent,
+    secondaryTitle
+  });
+
   const extraClass = customClass ? ` ${customClass}` : "";
   const isVisualFailure = isVisualUser();
   const shoppingCartContainerClass = `shopping_cart_container${
@@ -83,25 +70,28 @@ const HeaderContainer = ({
       </div>
     </div>
   );
+});
+
+// Add PropTypes for the internal components
+LeftComponent.propTypes = {
+  leftComponent: PropTypes.element.isRequired,
 };
+
+RightComponent.propTypes = {
+  rightComponent: PropTypes.element.isRequired,
+};
+
+Title.propTypes = {
+  title: PropTypes.string.isRequired,
+};
+
 HeaderContainer.propTypes = {
-  /**
-   * A custom class for the header container
-   */
   customClass: PropTypes.string,
-  /**
-   * A react component for the left
-   */
   secondaryLeftComponent: PropTypes.element,
-  /**
-   * A react component for the right
-   */
   secondaryRightComponent: PropTypes.element,
-  /**
-   * A title
-   */
-  title: PropTypes.string,
+  secondaryTitle: PropTypes.string,
 };
+
 HeaderContainer.defaultProps = {
   customClass: undefined,
   secondaryLeftComponent: undefined,

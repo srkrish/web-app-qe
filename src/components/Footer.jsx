@@ -2,6 +2,7 @@ import React from "react";
 import "./Footer.css";
 
 const SwagLabsFooter = () => {
+  console.log('SwagLabsFooter render called');
   return (
     <footer className="footer" data-test="footer">
       {/* <div className="footer_container"> */}
