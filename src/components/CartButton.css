@@ -1,3 +1,4 @@
+/* CartButton.css */
 .shopping_cart_link {
   background: url("../assets/img/cart.png") no-repeat center center;
   background: url("../assets/svg/cart3x.svg") no-repeat center center,
@@ -6,6 +7,7 @@
   width: 40px;
   display: block;
   position: relative;
+  text-decoration: none;
 }
 
 .shopping_cart_badge {
@@ -23,4 +25,10 @@
   justify-content: center;
   align-items: center;
   position: absolute;
+  font-size: 12px;
+}
+
+/* Remove the cart label */
+.shopping_cart_label {
+  display: none;
 }

@@ -1,66 +1,71 @@
-.checkout_info_container {
+/* CheckOutStepOne.css */
+.checkout_info {
+  width: 100%;
   max-width: 1280px;
   margin: 0 auto;
-  padding-top: 30px;
-}
-
-.checkout_info_wrapper {
   padding: 0 15px;
 }
 
-.checkout_info {
-  max-width: 380px;
-  margin: 0 auto;
-  padding-top: 30px;
+.checkout-header {
+  padding: 30px 0;
 }
 
-.checkout_buttons {
-  margin-top: 5px;
-  border-top: 1px solid #ededed;
+.checkout-header h2 {
+  font-weight: normal;
+  font-size: 24px;
+  margin: 0;
+}
+
+.checkout-content {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 30px;
+  background: #fff;
+  border-radius: 4px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #E2E2E2;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.form-buttons {
   display: flex;
   justify-content: space-between;
-  padding: 40px 0;
-  margin-bottom: 30px;
+  margin-top: 30px;
 }
 
-.checkout_buttons .btn_primary {
+.cancel-button {
+  padding: 12px 30px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  background: transparent;
+  color: #000;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.continue-button {
+  padding: 12px 30px;
   border: none;
+  border-radius: 4px;
+  background: #3ddc91;
+  color: #000;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-.checkout_buttons .btn_secondary.back {
-  color: #132322;
-  border: 1px solid #132322;
+.cancel-button:hover {
+  background: rgba(0, 0, 0, 0.05);
 }
 
-.checkout_buttons .btn_secondary.back .back-image {
-  left: 12px;
-}
-
-.checkout_buttons .btn {
-  width: 220px;
-}
-
-.checkout_buttons .btn {
-  margin-bottom: 0;
-}
-
-@media only screen and (min-width: 900px) {
-  .checkout_info {
-    border: 1px solid #ededed;
-    border-radius: 8px;
-    padding: 40px 40px 0 40px;
-    margin: 70px auto 100px auto;
-  }
-}
-
-@media only screen and (max-width: 640px) {
-  .checkout_buttons {
-    display: block;
-    justify-content: inherit;
-  }
-
-  .checkout_buttons .btn {
-    margin-bottom: 15px;
-    width: 100%;
-  }
+.continue-button:hover {
+  background: #2ebd77;
 }

@@ -1,136 +1,118 @@
 import React, { useState } from "react";
-import { withRouter } from "react-router-dom";
-import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 import { isProblemUser, isErrorUser } from "../utils/Credentials";
 import { ROUTES } from "../utils/Constants";
 import SwagLabsFooter from "../components/Footer";
 import HeaderContainer from "../components/HeaderContainer";
 import InputError, { INPUT_TYPES } from "../components/InputError";
 import ErrorMessage from "../components/ErrorMessage";
-import SubmitButton from "../components/SubmitButton";
-import Button, { BUTTON_SIZES, BUTTON_TYPES } from "../components/Button";
 import "./CheckOutStepOne.css";
 
-const CheckOutStepOne = ({ history }) => {
+const CheckOutStepOne = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [postalCode, setPostalCode] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
+
   const dismissError = () => {
     setError("");
   };
+
   const handleFirstNameChange = (evt) => {
     setFirstName(evt.target.value);
   };
+
   const handleLastNameChange = (evt) => {
     if (isProblemUser()) {
-      // Overwrite the firstname also
       return setFirstName(evt.target.value);
-    } else if (isErrorUser()) {
-      // Fail here with TypeError. This will be reported to Backtrace
-      return setLastName(evt.totallyUndefined.value);
     }
-
     setLastName(evt.target.value);
   };
+
   const handlePostalCodeChange = (evt) => {
     setPostalCode(evt.target.value);
   };
+
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
-    if (!firstName) {
-      return setError("First Name is required");
+    if (!firstName || !lastName || !postalCode) {
+      return setError("Error: First Name is required");
     }
 
-    // Allow to pass for error_user without lastName, as it is impossible to set (errors are thrown)
-    if (!lastName && !isErrorUser()) {
-      return setError("Last Name is required");
+    if (isErrorUser()) {
+      return setError("Error: Last Name is required");
     }
 
-    if (!postalCode) {
-      return setError("Postal Code is required");
-    }
-
-    // If we're here, we have our required info. Redirect!
-    history.push(ROUTES.CHECKOUT_STEP_TWO);
-
-    return "";
+    navigate(ROUTES.CHECKOUT_STEP_TWO);
   };
 
   return (
     <div id="page_wrapper" className="page_wrapper">
       <div id="contents_wrapper">
-        <HeaderContainer secondaryTitle="Checkout: Your Information" />
-        <div
-          id="checkout_info_container"
-          className="checkout_info_container"
-          data-test="checkout-info-container"
-        >
-          <div className="checkout_info_wrapper">
-            <form onSubmit={handleSubmit}>
-              <div className="checkout_info">
+        <HeaderContainer />
+        <div className="checkout_info">
+          <div className="checkout-header">
+            <h2>Checkout: Your Information</h2>
+          </div>
+          <div className="checkout-content">
+            {error && (
+              <ErrorMessage
+                isError={true}
+                errorMessage={`Epic sadface: ${error}`}
+                onClick={dismissError}
+              />
+            )}
+            <form>
+              <div className="form-group">
                 <InputError
-                  isError={Boolean(error)}
                   type={INPUT_TYPES.TEXT}
+                  id="first-name"
+                  placeholder="First Name"
                   value={firstName}
                   onChange={handleFirstNameChange}
-                  testId="firstName"
-                  placeholder="First Name"
-                  // Custom
-                  id="first-name"
-                  autoCorrect="off"
-                  autoCapitalize="none"
-                />
-                <InputError
                   isError={Boolean(error)}
-                  type={INPUT_TYPES.TEXT}
-                  value={lastName}
-                  onChange={handleLastNameChange}
-                  testId="lastName"
-                  placeholder="Last Name"
-                  // Custom
-                  id="last-name"
-                  autoCorrect="off"
-                  autoCapitalize="none"
-                />
-                <InputError
-                  isError={Boolean(error)}
-                  type={INPUT_TYPES.TEXT}
-                  value={postalCode}
-                  onChange={handlePostalCodeChange}
-                  testId="postalCode"
-                  placeholder="Zip/Postal Code"
-                  // Custom
-                  id="postal-code"
-                  autoCorrect="off"
-                  autoCapitalize="none"
-                />
-                <ErrorMessage
-                  isError={Boolean(error)}
-                  errorMessage={`Error: ${error}`}
-                  onClick={dismissError}
+                  data-test="firstName"
                 />
               </div>
-              <div className="checkout_buttons">
-                <Button
-                  // `cart_cancel_link` has no style function
-                  // but is there for backwards compatibility
-                  customClass="cart_cancel_link"
-                  label="Cancel"
-                  onClick={(evt) => {
-                    evt.preventDefault();
-                    history.push(ROUTES.CART);
-                  }}
-                  size={BUTTON_SIZES.MEDIUM}
-                  testId="cancel"
-                  type={BUTTON_TYPES.BACK}
+              <div className="form-group">
+                <InputError
+                  type={INPUT_TYPES.TEXT}
+                  id="last-name"
+                  placeholder="Last Name"
+                  value={lastName}
+                  onChange={handleLastNameChange}
+                  isError={Boolean(error)}
+                  data-test="lastName"
                 />
-                <SubmitButton
-                  customClass="btn btn_primary cart_button btn_action"
-                  testId="continue"
-                  value="Continue"
+              </div>
+              <div className="form-group">
+                <InputError
+                  type={INPUT_TYPES.TEXT}
+                  id="postal-code"
+                  placeholder="Zip/Postal Code"
+                  value={postalCode}
+                  onChange={handlePostalCodeChange}
+                  isError={Boolean(error)}
+                  data-test="postalCode"
                 />
+              </div>
+              <div className="form-buttons">
+                <button 
+                  className="cancel-button"
+                  onClick={() => navigate(ROUTES.CART)}
+                  type="button"
+                >
+                  Cancel
+                </button>
+                <button 
+                  className="continue-button"
+                  onClick={handleSubmit}
+                  type="submit"
+                >
+                  Continue
+                </button>
               </div>
             </form>
           </div>
@@ -140,13 +122,5 @@ const CheckOutStepOne = ({ history }) => {
     </div>
   );
 };
-CheckOutStepOne.propTypes = {
-  /**
-   * The history
-   */
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-};
 
-export default withRouter(CheckOutStepOne);
+export default CheckOutStepOne;

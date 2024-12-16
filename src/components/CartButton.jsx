@@ -47,10 +47,8 @@ const CartButton = () => {
           {itemCount}
         </span>
       )}
-      <span className="shopping_cart_label">Cart</span>
     </a>
   );
 };
 
-// Make sure to add this line
 export default CartButton;

@@ -7,7 +7,7 @@ import "react-app-polyfill/stable";
 import { BacktraceClient, ErrorBoundary } from "@backtrace-labs/react";
 import React from "react";
 import ReactDOM from "react-dom";
-import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
+import { Routes, Route, BrowserRouter as Router, Navigate } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 import "./index.css";
 import Cart from "./pages/Cart";
@@ -71,6 +71,9 @@ const routing = (
             element={<Finish />} 
           />
         </Route>
+
+        {/* Catch all redirect to login */}
+        <Route path="*" element={<Navigate to={ROUTES.LOGIN} replace />} />
       </Routes>
     </Router>
   </ErrorBoundary>
