@@ -1,7 +1,7 @@
 import { shallow } from "enzyme";
 import React, { useState as useStateMock } from "react";
 import * as Credentials from "../utils/Credentials";
-import InventoryItem from "../InventoryItem";
+import InventoryItem from "../inventory/InventoryItem/InventoryItem";
 
 jest.mock("react", () => ({
   ...jest.requireActual("react"),

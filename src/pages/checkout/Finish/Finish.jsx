@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Checkmark from "../assets/img/checkmark.png";
+import Checkmark from "assets/img/checkmark.png";
 import SwagLabsFooter from "components/layout/Footer";
 import HeaderContainer from "components/layout/HeaderContainer";
 import Button, { BUTTON_SIZES } from "components/common/Button";

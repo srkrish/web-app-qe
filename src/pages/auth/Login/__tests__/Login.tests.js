@@ -1,6 +1,6 @@
 import React, { useState as useStateMock } from "react";
 import { shallow } from "enzyme";
-import Login from "../Login";
+import Login from "../auth/Login/Login";
 import * as Credentials from "../utils/Credentials";
 
 jest.mock("react", () => ({

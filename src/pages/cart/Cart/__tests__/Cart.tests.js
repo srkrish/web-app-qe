@@ -1,6 +1,6 @@
 import React from "react";
 import { shallow } from "enzyme";
-import Cart from "../Cart";
+import Cart from "../cart/Cart/Cart";
 import { ShoppingCart } from "../utils/shopping-cart";
 import * as Credentials from "../utils/Credentials";
 

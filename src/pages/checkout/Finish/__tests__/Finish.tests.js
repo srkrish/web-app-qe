@@ -1,6 +1,6 @@
 import React from "react";
 import { shallow } from "enzyme";
-import Finish from "../Finish";
+import Finish from "../checkout/Finish/Finish";
 
 jest.mock("../utils/shopping-cart");
 

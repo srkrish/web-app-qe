@@ -1,6 +1,6 @@
 import React, { useState as useStateMock } from "react";
 import { shallow } from "enzyme";
-import Inventory from "../Inventory";
+import Inventory from "../inventory/Inventory/Inventory";
 import * as Credentials from "../utils/Credentials";
 import {InventoryData} from "../utils/InventoryData";
 import {InventoryDataLong} from "../utils/InventoryDataLong";
