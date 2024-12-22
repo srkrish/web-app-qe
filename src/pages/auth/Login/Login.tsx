@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from "react";
+import { useEffect, Fragment, FormEvent, ChangeEvent } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import "./Login.css";
@@ -7,11 +7,18 @@ import {
   setCredentials,
   verifyCredentials,
 } from "utils/Credentials";
-import { ROUTES, VALID_USERNAMES, VALID_PASSWORD } from "utils/Constants";
-import InputError, { INPUT_TYPES } from "components/forms/InputError";
-import SubmitButton from "components/forms/SubmitButton";
-import ErrorMessage from "components/common/ErrorMessage";
+import { ROUTES, VALID_USERNAMES, VALID_PASSWORD } from "@utils/Constants";
+import InputError from "@components/forms/InputError";
+import { INPUT_TYPES } from "@components/forms/types";  // Update this path based on where you moved the types
+import SubmitButton from "@components/forms/SubmitButton";
+import ErrorMessage from "@components/common/ErrorMessage";
 import { BacktraceClient } from "@backtrace-labs/react";
+
+interface LocationState {
+  from?: {
+    pathname: string;
+  };
+}
 
 function Login() {
   const navigate = useNavigate();
@@ -23,9 +30,10 @@ function Login() {
 
   useEffect(() => {
     // Check if we have location state and show the message
-    if (location.state?.from) {
+    const state = location.state as LocationState;
+    if (state?.from) {
       setRedirectMessage(
-        `You can only access '${location.state.from.pathname}' when you are logged in.`
+        `You can only access '${state.from.pathname}' when you are logged in.`
       );
       // Clear the location state to prevent the message from persisting
       navigate(location.pathname, { replace: true, state: null });
@@ -37,7 +45,7 @@ function Login() {
     setRedirectMessage("");
   };
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     if (!username) {
       return setInputError("Username is required");
@@ -52,7 +60,7 @@ function Login() {
       setCredentials(username, password);
   
       if (isLockedOutUser()) {
-        BacktraceClient.instance.send(
+        BacktraceClient.instance?.send(
           new Error("Locked out user tried to log in."),
           { username }
         );
@@ -64,7 +72,7 @@ function Login() {
       console.log('Credentials set, navigating to inventory');
       navigate(ROUTES.INVENTORY);
     } else {
-      BacktraceClient.instance.send(
+      BacktraceClient.instance?.send(
         "Someone tried to login with invalid credentials.",
         { username }
       );
@@ -74,11 +82,11 @@ function Login() {
     }
   };
 
-  const handleUserChange = (evt) => {
+  const handleUserChange = (evt: ChangeEvent<HTMLInputElement>) => {
     setUsername(evt.target.value);
   };
 
-  const handlePassChange = (evt) => {
+  const handlePassChange = (evt: ChangeEvent<HTMLInputElement>) => {
     setPassword(evt.target.value);
   };
 
@@ -113,7 +121,6 @@ function Login() {
                   autoCorrect="off"
                   autoCapitalize="none"
                 />
-                {/* Single error message component that shows either redirect message or input error */}
                 {(redirectMessage || inputError) && (
                   <ErrorMessage
                     isError={true}
