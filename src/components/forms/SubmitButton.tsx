@@ -1,13 +1,13 @@
-import React from "react";
+import { ReactElement } from "react";
 import { SubmitButtonProps } from "./types";
 import "./SubmitButton.css";
 
-const SubmitButton: React.FC<SubmitButtonProps> = ({ 
+const SubmitButton = ({ 
   customClass = "",
   testId,
   value,
   ...props 
-}) => {
+}: SubmitButtonProps): ReactElement => {
   const extraClass = customClass ? ` ${customClass}` : "";
   
   return (
