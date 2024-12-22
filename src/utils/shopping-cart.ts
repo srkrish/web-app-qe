@@ -1,70 +1,74 @@
-export class ShoppingCart {
-  static LISTENERS = [];
+import { CartListener } from './types';
 
-  static addItem(itemId) {
+interface CartItem {
+  id: number;
+}
+
+export class ShoppingCart {
+  private static LISTENERS: CartListener[] = [];
+
+  static addItem(itemId: number): void {
     console.log('Adding item to cart:', itemId);
     const curContents = ShoppingCart.getCartContents();
     console.log('Current contents before add:', curContents);
 
-    if (curContents.indexOf(itemId) < 0) {
+    if (!curContents.includes(itemId)) {
       curContents.push(itemId);
       console.log('New contents after add:', curContents);
       ShoppingCart.setCartContents(curContents);
     }
   }
 
-  static removeItem(itemId) {
+  static removeItem(itemId: number): void {
     console.log('ShoppingCart: Removing item:', itemId);
     const curContents = ShoppingCart.getCartContents();
-    // Filter out the item with matching id
     const updatedContents = curContents.filter(item => 
-      typeof item === 'object' ? item.id !== itemId : item !== itemId
+      typeof item === 'object' && 'id' in item ? (item as CartItem).id !== itemId : item !== itemId
     );
     
     console.log('ShoppingCart: Updated contents:', updatedContents);
     ShoppingCart.setCartContents(updatedContents);
     
-    // Ensure listeners are notified
-    ShoppingCart.LISTENERS.forEach(listener => {
-      if (listener && typeof listener.forceUpdate === 'function') {
-        listener.forceUpdate();
-      }
-    });
+    ShoppingCart.notifyListeners();
   }
 
-  static isItemInCart(itemId) {
+  static isItemInCart(itemId: number): boolean {
     const curContents = ShoppingCart.getCartContents();
-    const isIn = curContents.indexOf(itemId) >= 0;
+    const isIn = curContents.includes(itemId);
     console.log('Checking if item in cart:', itemId, isIn);
     return isIn;
   }
 
-  static getCartContents() {
-    let curContents = window.localStorage.getItem("cart-contents");
+  static getCartContents(): number[] {
+    const curContents = window.localStorage.getItem("cart-contents");
     console.log('Raw cart contents from storage:', curContents);
 
-    if (curContents == null) {
-      curContents = [];
-    } else {
-      curContents = JSON.parse(curContents);
+    if (!curContents) {
+      return [];
     }
-    console.log('Parsed cart contents:', curContents);
-    return curContents;
+
+    try {
+      const parsed = JSON.parse(curContents);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      console.error('Error parsing cart contents:', e);
+      return [];
+    }
   }
 
-  static setCartContents(newContents) {
+  static setCartContents(newContents: number[]): void {
     console.log('Setting cart contents:', newContents);
     window.localStorage.setItem("cart-contents", JSON.stringify(newContents));
     ShoppingCart.notifyListeners();
   }
 
-  static resetCart() {
+  static resetCart(): void {
     console.log('Resetting cart');
     window.localStorage.removeItem("cart-contents");
     ShoppingCart.notifyListeners();
   }
 
-  static notifyListeners() {
+  static notifyListeners(): void {
     console.log('Notifying listeners:', ShoppingCart.LISTENERS.length);
     ShoppingCart.LISTENERS.forEach((listener) => {
       if (listener && typeof listener.forceUpdate === 'function') {
@@ -73,14 +77,14 @@ export class ShoppingCart {
     });
   }
 
-  static registerCartListener(handler) {
+  static registerCartListener(handler: CartListener): void {
     console.log('Registering cart listener');
     if (handler && typeof handler.forceUpdate === 'function') {
       ShoppingCart.LISTENERS.push(handler);
     }
   }
 
-  static removeCartListener(handler) {
+  static removeCartListener(handler: CartListener): void {
     console.log('Removing cart listener');
     ShoppingCart.LISTENERS = ShoppingCart.LISTENERS.filter(
       (listener) => listener !== handler

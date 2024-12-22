@@ -1,4 +1,6 @@
-export const InventoryData = [
+import { InventoryItem } from './types';
+
+export const InventoryData: InventoryItem[] = [
   {
     id: 0,
     name: "Sauce Labs Bike Light",

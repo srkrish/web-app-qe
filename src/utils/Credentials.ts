@@ -1,26 +1,25 @@
-// utils/Credentials.js
 import { VALID_USERNAMES, VALID_PASSWORD, SESSION_USERNAME } from "./Constants";
+import { Credentials } from "./types";
 
-export const verifyCredentials = (username, password) => {
-  return VALID_USERNAMES.includes(username) && password === VALID_PASSWORD;
+export const verifyCredentials = (username: string, password: string): boolean => {
+  return VALID_USERNAMES.includes(username as any) && password === VALID_PASSWORD;
 };
 
-export const setCredentials = (username, password) => {
+export const setCredentials = (username: string, password: string): void => {
   if (username && password) {
     localStorage.setItem('credentials', JSON.stringify({ username, password }));
     localStorage.setItem(SESSION_USERNAME, username);
   }
 };
 
-export const clearCredentials = () => {
+export const clearCredentials = (): void => {
   localStorage.removeItem('credentials');
   localStorage.removeItem(SESSION_USERNAME);
 };
 
-// Maintain backward compatibility
 export const removeCredentials = clearCredentials;
 
-export const isLoggedIn = () => {
+export const isLoggedIn = (): boolean => {
   const storedUsername = localStorage.getItem(SESSION_USERNAME);
   const storedCredentials = localStorage.getItem('credentials');
   
@@ -29,38 +28,38 @@ export const isLoggedIn = () => {
   }
   
   try {
-    const { username, password } = JSON.parse(storedCredentials);
+    const { username, password } = JSON.parse(storedCredentials) as Credentials;
     return Boolean(username && password && verifyCredentials(username, password));
   } catch (e) {
     return false;
   }
 };
 
-export const currentUser = () => {
-  return localStorage.getItem(SESSION_USERNAME) || null;
+export const currentUser = (): string | null => {
+  return localStorage.getItem(SESSION_USERNAME);
 };
 
-export const isProblemUser = () => {
+export const isProblemUser = (): boolean => {
   const user = currentUser();
   return user === 'problem_user';
 };
 
-export const isErrorUser = () => {
+export const isErrorUser = (): boolean => {
   const user = currentUser();
   return user === 'error_user';
 };
 
-export const isPerformanceGlitchUser = () => {
+export const isPerformanceGlitchUser = (): boolean => {
   const user = currentUser();
   return user === 'performance_glitch_user';
 };
 
-export const isVisualUser = () => {
+export const isVisualUser = (): boolean => {
   const user = currentUser();
   return user === 'visual_user';
 };
 
-export const isLockedOutUser = () => {
+export const isLockedOutUser = (): boolean => {
   const user = currentUser();
   return user === 'locked_out_user';
 };
