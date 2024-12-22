@@ -1,28 +1,26 @@
 // Needed to add the below due to issues in IE11, see this thread
-// https://github.com/facebook/create-react-app/issues/9906#issuecomment-720905753
-/** @jsxRuntime classic */
+// https://github.com/facebook/create-react-app/issues/9906#issxRuntime classic */
 import "react-app-polyfill/ie11";
 import "react-app-polyfill/stable";
 
 import { BacktraceClient, ErrorBoundary } from "@backtrace-labs/react";
-import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { Routes, Route, BrowserRouter as Router, Navigate } from "react-router-dom";
 import PrivateRoute from "components/auth/PrivateRoute";
 import "./index.css";
-import Cart from "./pages/cart/Cart/Cart";
-import CheckOutStepOne from "./pages/checkout/StepOne/CheckOutStepOne";
-import CheckOutStepTwo from "./pages/checkout/StepTwo/CheckOutStepTwo";
-import Finish from "./pages/checkout/Finish/Finish";
-import Inventory from "./pages/inventory/Inventory/Inventory";
-import InventoryItem from "./pages/inventory/InventoryItem/InventoryItem";
-import Login from "./pages/auth/Login/Login";
+import Cart from "@pages/cart/Cart/Cart";
+import CheckOutStepOne from "@pages/checkout/StepOne/CheckOutStepOne";
+import CheckOutStepTwo from "@pages/checkout/StepTwo/CheckOutStepTwo";
+import Finish from "@pages/checkout/Finish/Finish";
+import Inventory from "@pages/inventory/Inventory/Inventory";
+import InventoryItem from "@pages/inventory/InventoryItem/InventoryItem";
+import Login from "@pages/auth/Login/Login";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
-import { ROUTES } from "utils/Constants";
-import { currentUser } from "utils/Credentials";
-import { ShoppingCart } from "utils/shopping-cart";
-import { InventoryData } from "utils/InventoryData.js";
-import { InventoryDataLong } from "utils/InventoryDataLong.js";
+import { ROUTES } from "@utils/Constants";
+import { currentUser } from "@utils/Credentials";
+import { ShoppingCart } from "@utils/shopping-cart";
+import { InventoryData } from "@utils/InventoryData";
+import { InventoryDataLong } from "@utils/InventoryDataLong";
 
 BacktraceClient.initialize({
   name: "Swag Store",
@@ -79,9 +77,19 @@ const routing = (
   </ErrorBoundary>
 );
 
-ReactDOM.render(routing, document.getElementById("root"));
+// Get the root element
+const container = document.getElementById("root");
+
+// Make sure container exists
+if (!container) {
+  throw new Error("Failed to find the root element");
+}
+
+// Create root and render
+const root = createRoot(container);
+root.render(routing);
 
 // If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
+// unregister() to register() below. This comes with some pitfalls.
 // Learn more about service workers: https://cra.link/PWA
 serviceWorkerRegistration.register();
