@@ -1,26 +1,44 @@
-import React, { memo } from "react";
-import PropTypes from "prop-types";
+import { memo, ReactElement } from "react";
 import "./HeaderContainer.css";
-import DrawerMenu from "components/layout/DrawerMenu";
-import CartButton from "components/features/cart/CartButton";
-import { isVisualUser } from "utils/Credentials";
+import DrawerMenu from "@components/layout/DrawerMenu";
+import CartButton from "@components/features/cart/CartButton";
+import { isVisualUser } from "@utils/Credentials";
 
-// Move component definitions outside
-const LeftComponent = memo(({ leftComponent }) => (
+interface LeftComponentProps {
+  leftComponent: ReactElement;
+}
+
+interface RightComponentProps {
+  rightComponent: ReactElement;
+}
+
+interface TitleProps {
+  title: string;
+}
+
+interface HeaderContainerProps {
+  customClass?: string;
+  secondaryLeftComponent?: ReactElement;
+  secondaryRightComponent?: ReactElement;
+  secondaryTitle?: string;
+}
+
+// Move component definitions outside with proper types
+const LeftComponent = memo<LeftComponentProps>(({ leftComponent }) => (
   <div className="left_component">{leftComponent}</div>
 ));
 
-const RightComponent = memo(({ rightComponent }) => (
+const RightComponent = memo<RightComponentProps>(({ rightComponent }) => (
   <div className="right_component">{rightComponent}</div>
 ));
 
-const Title = memo(({ title }) => (
+const Title = memo<TitleProps>(({ title }) => (
   <span className="title" data-test="title">
     {title}
   </span>
 ));
 
-const HeaderContainer = memo(({
+const HeaderContainer = memo<HeaderContainerProps>(({
   customClass,
   secondaryLeftComponent,
   secondaryRightComponent,
@@ -72,31 +90,10 @@ const HeaderContainer = memo(({
   );
 });
 
-// Add PropTypes for the internal components
-LeftComponent.propTypes = {
-  leftComponent: PropTypes.element.isRequired,
-};
-
-RightComponent.propTypes = {
-  rightComponent: PropTypes.element.isRequired,
-};
-
-Title.propTypes = {
-  title: PropTypes.string.isRequired,
-};
-
-HeaderContainer.propTypes = {
-  customClass: PropTypes.string,
-  secondaryLeftComponent: PropTypes.element,
-  secondaryRightComponent: PropTypes.element,
-  secondaryTitle: PropTypes.string,
-};
-
-HeaderContainer.defaultProps = {
-  customClass: undefined,
-  secondaryLeftComponent: undefined,
-  secondaryRightComponent: undefined,
-  secondaryTitle: undefined,
-};
+// Add display names for better debugging
+LeftComponent.displayName = 'LeftComponent';
+RightComponent.displayName = 'RightComponent';
+Title.displayName = 'Title';
+HeaderContainer.displayName = 'HeaderContainer';
 
 export default HeaderContainer;
