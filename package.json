@@ -41,6 +41,7 @@
     "@types/node": "^22.10.2",
     "@types/prop-types": "^15.7.14",
     "@types/react": "^19.0.2",
+    "@types/react-burger-menu": "^2.8.7",
     "@types/react-dom": "^19.0.2",
     "@wdio/cli": "^7.3.1",
     "@wdio/jasmine-framework": "^7.3.1",
