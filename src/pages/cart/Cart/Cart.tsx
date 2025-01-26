@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "utils/Constants";
 import { ShoppingCart } from "utils/shopping-cart";
@@ -12,8 +11,8 @@ import { isVisualUser } from "utils/Credentials";
 const Cart = () => {
   console.log('Cart component rendering');
   const navigate = useNavigate();
-  const cartItems = ShoppingCart.getCartContents();
-  console.log('Cart items:', cartItems);
+  const cartItemIds = ShoppingCart.getCartContents();
+  console.log('Cart items:', cartItemIds);
 
   const buttonClass = `checkout_button ${
     isVisualUser() ? "btn_visual_failure" : ""
@@ -30,7 +29,7 @@ const Cart = () => {
         >
           <div>
             <div className="cart_list" data-test="cart-list">
-              {cartItems.length > 0 && (
+              {cartItemIds.length > 0 && (
                 <>
                   <div className="cart_quantity_label" data-test="cart-quantity-label">
                     QTY
@@ -40,14 +39,14 @@ const Cart = () => {
                   </div>
                 </>
               )}
-              {cartItems.map((item, i) => (
+              {cartItemIds.map((itemId, i) => (
                 <CartItem 
-                  key={`${item.id}-${i}`} 
-                  item={item} 
+                  key={`${itemId}-${i}`} 
+                  item={{ id: itemId }} 
                   showButton 
                 />
               ))}
-              {cartItems.length === 0 && (
+              {cartItemIds.length === 0 && (
                 <div className="cart_empty">Your cart is empty</div>
               )}
             </div>
@@ -59,7 +58,7 @@ const Cart = () => {
                 testId="continue-shopping"
                 type={BUTTON_TYPES.BACK}
               />
-              {cartItems.length > 0 && (
+              {cartItemIds.length > 0 && (
                 <Button
                   label="Checkout"
                   customClass={buttonClass}
@@ -78,4 +77,4 @@ const Cart = () => {
   );
 };
 
-export default Cart;  
+export default Cart;
