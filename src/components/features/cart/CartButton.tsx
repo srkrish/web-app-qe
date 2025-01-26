@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ShoppingCart } from "utils/shopping-cart";
 import { ROUTES } from "utils/Constants";
@@ -26,7 +26,7 @@ const CartButton = () => {
 
     return () => {
       console.log('CartButton: Cleaning up listener');
-      ShoppingCart.LISTENERS = ShoppingCart.LISTENERS.filter(l => l !== cartListener);
+      ShoppingCart.removeCartListener(cartListener);
     };
   }, []);
 
