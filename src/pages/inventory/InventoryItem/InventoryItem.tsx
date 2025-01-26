@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { isProblemUser, isErrorUser } from "utils/Credentials";
 import { ROUTES } from "utils/Constants";
 import { ShoppingCart } from "utils/shopping-cart";
 import { InventoryData } from "utils/InventoryData";
@@ -9,43 +8,52 @@ import Button, { BUTTON_SIZES, BUTTON_TYPES } from "components/common/Button";
 import SwagLabsFooter from "components/layout/Footer";
 import "./InventoryItem.css";
 
+interface InventoryItem {
+  id: number;
+  name: string;
+  desc: string;
+  image_url: string;
+  price: number | string;
+}
+
 const InventoryItem = () => {
   const navigate = useNavigate();
-  const [inventoryItem, setInventoryItem] = useState(null);
+  const [inventoryItem, setInventoryItem] = useState<InventoryItem | null>(null);
   const [itemInCart, setItemInCart] = useState(false);
 
-  const handleNavigation = (path) => {
+  const handleNavigation = (path: string) => {
     navigate(path);
   };
 
   useEffect(() => {
     window.scrollTo(0, 0);
 
-    // Get our queryparams now
     const queryParams = new URLSearchParams(window.location.search);
-    let inventoryId = queryParams.get("id");
+    const inventoryIdParam = queryParams.get("id");
 
-    if (inventoryId) {
-      inventoryId = parseInt(inventoryId, 10);
+    if (inventoryIdParam) {
+      const inventoryId = parseInt(inventoryIdParam, 10);
       const fetchedItem = InventoryData.find((invItem) => invItem.id === inventoryId);
+      
       if (fetchedItem) {
         setInventoryItem(fetchedItem);
-        setItemInCart(ShoppingCart.isItemInCart(inventoryId));
+        setItemInCart(ShoppingCart.isItemInCart(fetchedItem.id));
       } else {
-        setInventoryItem({
+        const errorItem: InventoryItem = {
           id: inventoryId,
           name: "Error",
           desc: "Item not found",
           image_url: "sl-404.jpg",
           price: "√-1",
-        });
+        };
+        setInventoryItem(errorItem);
       }
     }
   }, []);
 
   const addToCart = () => {
     if (inventoryItem) {
-      ShoppingCart.addItem(inventoryItem);
+      ShoppingCart.addItem(inventoryItem.id);
       setItemInCart(true);
     }
   };
