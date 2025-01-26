@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { isProblemUser, isErrorUser } from "utils/Credentials";
 import { ROUTES } from "utils/Constants";
 import SwagLabsFooter from "components/layout/Footer";
 import HeaderContainer from "components/layout/HeaderContainer";
-import InputError, { INPUT_TYPES } from "components/forms/InputError";
+import InputError from "components/forms/InputError";
 import ErrorMessage from "components/common/ErrorMessage";
 import "./CheckOutStepOne.css";
+
+// Assuming this is the correct type from InputError component
+const INPUT_TYPES = {
+  TEXT: "text"
+} as const;
 
 const CheckOutStepOne = () => {
   const [firstName, setFirstName] = useState("");
@@ -19,22 +24,22 @@ const CheckOutStepOne = () => {
     setError("");
   };
 
-  const handleFirstNameChange = (evt) => {
+  const handleFirstNameChange = (evt: ChangeEvent<HTMLInputElement>) => {
     setFirstName(evt.target.value);
   };
 
-  const handleLastNameChange = (evt) => {
+  const handleLastNameChange = (evt: ChangeEvent<HTMLInputElement>) => {
     if (isProblemUser()) {
       return setFirstName(evt.target.value);
     }
     setLastName(evt.target.value);
   };
 
-  const handlePostalCodeChange = (evt) => {
+  const handlePostalCodeChange = (evt: ChangeEvent<HTMLInputElement>) => {
     setPostalCode(evt.target.value);
   };
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
 
     if (!firstName || !lastName || !postalCode) {
@@ -64,7 +69,7 @@ const CheckOutStepOne = () => {
                 onClick={dismissError}
               />
             )}
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <InputError
                   type={INPUT_TYPES.TEXT}
@@ -108,7 +113,6 @@ const CheckOutStepOne = () => {
                 </button>
                 <button 
                   className="continue-button"
-                  onClick={handleSubmit}
                   type="submit"
                 >
                   Continue
