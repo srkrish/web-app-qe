@@ -1,14 +1,24 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
 import { isProblemUser } from "utils/Credentials";
 import { ROUTES } from "utils/Constants";
 import { ShoppingCart } from "utils/shopping-cart";
 import Button, { BUTTON_SIZES, BUTTON_TYPES } from "components/common/Button";
 import "components/features/cart/CartItem.css";
 
-const CartItem = ({ item, showButton }) => {
-  console.log('CartItem rendering', { item });
+interface CartItemData {
+  id: number;
+  name: string;
+  desc: string;
+  price: number;
+}
+
+interface CartItemProps {
+  item?: CartItemData;
+  showButton?: boolean;
+}
+
+const CartItem: React.FC<CartItemProps> = ({ item, showButton = false }) => {
   const navigate = useNavigate();
   const [itemVisible, setItemVisible] = useState(Boolean(item));
 
@@ -16,10 +26,9 @@ const CartItem = ({ item, showButton }) => {
     setItemVisible(Boolean(item));
   }, [item]);
 
-  const removeFromCart = (itemId) => {
+  const removeFromCart = (itemId: number) => {
     console.log('CartItem: Removing item:', itemId);
     ShoppingCart.removeItem(itemId);
-    // After removing, force a refresh of the cart display
     setItemVisible(false);
   };
 
@@ -40,7 +49,6 @@ const CartItem = ({ item, showButton }) => {
     <div className="cart_item" data-test="inventory-item">
       <div className="cart_quantity" data-test="item-quantity">1</div>
       <div className="cart_item_label">
-
         <a href="#"
           id={`item_${id}_title_link`}
           onClick={(evt) => {
@@ -68,21 +76,6 @@ const CartItem = ({ item, showButton }) => {
       </div>
     </div>
   );
-};
-
-CartItem.propTypes = {
-  item: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    desc: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-  }),
-  showButton: PropTypes.bool,
-};
-
-CartItem.defaultProps = {
-  item: undefined,
-  showButton: false,
 };
 
 export default CartItem;
