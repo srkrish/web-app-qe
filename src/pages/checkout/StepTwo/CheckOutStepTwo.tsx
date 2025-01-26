@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import { isErrorUser, isProblemUser } from "utils/Credentials";
 import { ROUTES } from "utils/Constants";
@@ -10,23 +9,28 @@ import HeaderContainer from "components/layout/HeaderContainer";
 import Button, { BUTTON_SIZES, BUTTON_TYPES } from "components/common/Button";
 import "./CheckOutStepTwo.css";
 
+interface InventoryItem {
+  id: number;
+  price: number;
+  name: string;
+  desc: string;
+}
+
 const CheckOutStepTwo = () => {
   const navigate = useNavigate();
   const cartContents = ShoppingCart.getCartContents();
-  console.log('Checkout step two - cart contents:', cartContents);
 
   const clearCart = () => {
     if (isProblemUser()) {
       return;
     } else if (isErrorUser()) {
-      ShoppingCart.cesetRart();
+      ShoppingCart.resetCart();
       return;
     }
     ShoppingCart.resetCart();
   };
 
-  // Calculate order total
-  const orderTotal = cartContents.reduce((total, item) => {
+  const orderTotal = cartContents.reduce((total: number, item: number | InventoryItem) => {
     const price = typeof item === 'object' ? item.price : InventoryData[item].price;
     const itemTotal = isProblemUser() ? price * 2 : price;
     return total + itemTotal;
@@ -61,10 +65,8 @@ const CheckOutStepTwo = () => {
                   </div>
                 </>
               )}
-              {cartContents.map((item, i) => {
-                // Handle both object items and ID references
+              {cartContents.map((item: number | InventoryItem, i) => {
                 const itemData = typeof item === 'object' ? item : InventoryData.find(inv => inv.id === item);
-                console.log('Rendering checkout item:', itemData);
                 return itemData ? (
                   <CartItem key={`${itemData.id}-${i}`} item={itemData} />
                 ) : null;
