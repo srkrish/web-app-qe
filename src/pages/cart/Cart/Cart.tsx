@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "utils/Constants";
 import { ShoppingCart } from "utils/shopping-cart";
+import { InventoryData } from "utils/InventoryData";
 import CartItem from "components/features/cart/CartItem";
 import SwagLabsFooter from "components/layout/Footer";
 import HeaderContainer from "components/layout/HeaderContainer";
@@ -9,10 +10,9 @@ import "./Cart.css";
 import { isVisualUser } from "utils/Credentials";
 
 const Cart = () => {
-  console.log('Cart component rendering');
   const navigate = useNavigate();
   const cartItemIds = ShoppingCart.getCartContents();
-  console.log('Cart items:', cartItemIds);
+  const cartItems = cartItemIds.map(id => InventoryData.find(item => item.id === id)).filter(Boolean);
 
   const buttonClass = `checkout_button ${
     isVisualUser() ? "btn_visual_failure" : ""
@@ -29,7 +29,7 @@ const Cart = () => {
         >
           <div>
             <div className="cart_list" data-test="cart-list">
-              {cartItemIds.length > 0 && (
+              {cartItems.length > 0 && (
                 <>
                   <div className="cart_quantity_label" data-test="cart-quantity-label">
                     QTY
@@ -39,14 +39,14 @@ const Cart = () => {
                   </div>
                 </>
               )}
-              {cartItemIds.map((itemId, i) => (
+              {cartItems.map((item, i) => item && (
                 <CartItem 
-                  key={`${itemId}-${i}`} 
-                  item={{ id: itemId }} 
+                  key={`${item.id}-${i}`} 
+                  item={item} 
                   showButton 
                 />
               ))}
-              {cartItemIds.length === 0 && (
+              {cartItems.length === 0 && (
                 <div className="cart_empty">Your cart is empty</div>
               )}
             </div>
@@ -58,7 +58,7 @@ const Cart = () => {
                 testId="continue-shopping"
                 type={BUTTON_TYPES.BACK}
               />
-              {cartItemIds.length > 0 && (
+              {cartItems.length > 0 && (
                 <Button
                   label="Checkout"
                   customClass={buttonClass}
