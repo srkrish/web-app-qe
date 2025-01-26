@@ -4,6 +4,7 @@ import { isProblemUser } from "utils/Credentials";
 import { ROUTES } from "utils/Constants";
 import { ShoppingCart } from "utils/shopping-cart";
 import Button, { BUTTON_SIZES, BUTTON_TYPES } from "components/common/Button";
+import { InventoryData } from "utils/InventoryData";
 import "components/features/cart/CartItem.css";
 
 interface CartItemData {
@@ -14,16 +15,25 @@ interface CartItemData {
 }
 
 interface CartItemProps {
-  item?: CartItemData;
+  item?: CartItemData | number;
   showButton?: boolean;
 }
 
 const CartItem: React.FC<CartItemProps> = ({ item, showButton = false }) => {
   const navigate = useNavigate();
   const [itemVisible, setItemVisible] = useState(Boolean(item));
+  const [itemData, setItemData] = useState<CartItemData | null>(null);
 
   useEffect(() => {
     setItemVisible(Boolean(item));
+    if (typeof item === 'number') {
+      const inventoryItem = InventoryData.find((inv: CartItemData) => inv.id === item);
+      if (inventoryItem) {
+        setItemData(inventoryItem);
+      }
+    } else if (item) {
+      setItemData(item);
+    }
   }, [item]);
 
   const removeFromCart = (itemId: number) => {
@@ -32,11 +42,11 @@ const CartItem: React.FC<CartItemProps> = ({ item, showButton = false }) => {
     setItemVisible(false);
   };
 
-  if (!itemVisible || !item) {
+  if (!itemVisible || !itemData) {
     return null;
   }
 
-  const { id, name, desc, price } = item;
+  const { id, name, desc, price } = itemData;
   let linkId = id;
 
   if (isProblemUser()) {
@@ -44,6 +54,7 @@ const CartItem: React.FC<CartItemProps> = ({ item, showButton = false }) => {
   }
 
   const itemLink = `${ROUTES.INVENTORY_LIST}?id=${linkId}`;
+  const testId = name ? `remove-${name.replace(/\s+/g, "-").toLowerCase()}` : `remove-${id}`;
 
   return (
     <div className="cart_item" data-test="inventory-item">
@@ -66,7 +77,7 @@ const CartItem: React.FC<CartItemProps> = ({ item, showButton = false }) => {
             <Button
               customClass="cart_button"
               label="Remove"
-              testId={`remove-${name.replace(/\s+/g, "-").toLowerCase()}`}
+              testId={testId}
               onClick={() => removeFromCart(id)}
               size={BUTTON_SIZES.SMALL}
               type={BUTTON_TYPES.SECONDARY}

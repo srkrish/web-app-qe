@@ -1,8 +1,8 @@
 import { memo, ReactElement } from "react";
 import "./HeaderContainer.css";
-import DrawerMenu from "@components/layout/DrawerMenu";
-import CartButton from "@components/features/cart/CartButton";
-import { isVisualUser } from "@utils/Credentials";
+import DrawerMenu from "components/layout/DrawerMenu";
+import CartButton from "components/features/cart/CartButton";
+import { isVisualUser } from "utils/Credentials";
 
 interface LeftComponentProps {
   leftComponent: ReactElement;

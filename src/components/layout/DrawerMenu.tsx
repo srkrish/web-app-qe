@@ -7,10 +7,10 @@ import {
   isVisualUser,
   removeCredentials,
 } from "utils/Credentials";
-import menuClosePng from "@assets/img/close.png";
-import menuCloseSvg from "@assets/svg/close@3x.svg";
-import menuIconPng from "@assets/img/menu.png";
-import menuIconSvg from "@assets/svg/menu3x.svg";
+import menuClosePng from "assets/img/close.png";
+import menuCloseSvg from "assets/svg/close@3x.svg";
+import menuIconPng from "assets/img/menu.png";
+import menuIconSvg from "assets/svg/menu3x.svg";
 import "./DrawerMenu.css";
 
 const DrawerMenu = () => {

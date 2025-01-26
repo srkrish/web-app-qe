@@ -7,11 +7,11 @@ import {
   setCredentials,
   verifyCredentials,
 } from "utils/Credentials";
-import { ROUTES, VALID_USERNAMES, VALID_PASSWORD } from "@utils/Constants";
-import InputError from "@components/forms/InputError";
-import { INPUT_TYPES } from "@components/forms/types";  // Update this path based on where you moved the types
-import SubmitButton from "@components/forms/SubmitButton";
-import ErrorMessage from "@components/common/ErrorMessage";
+import { ROUTES, VALID_USERNAMES, VALID_PASSWORD } from "utils/Constants";
+import InputError from "components/forms/InputError";
+import { INPUT_TYPES } from "components/forms/types";  // Update this path based on where you moved the types
+import SubmitButton from "components/forms/SubmitButton";
+import ErrorMessage from "components/common/ErrorMessage";
 import { BacktraceClient } from "@backtrace-labs/react";
 
 interface LocationState {
