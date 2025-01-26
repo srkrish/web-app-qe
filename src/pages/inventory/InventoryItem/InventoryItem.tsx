@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ROUTES } from "utils/Constants";
 import { ShoppingCart } from "utils/shopping-cart";
 import { InventoryData } from "utils/InventoryData";
 import HeaderContainer from "components/layout/HeaderContainer";
-import Button, { BUTTON_SIZES, BUTTON_TYPES } from "components/common/Button";
 import SwagLabsFooter from "components/layout/Footer";
 import "./InventoryItem.css";
 
@@ -16,102 +15,71 @@ interface InventoryItem {
   price: number | string;
 }
 
-const InventoryItem = () => {
-  const navigate = useNavigate();
+const InventoryItemPage = () => {
   const [inventoryItem, setInventoryItem] = useState<InventoryItem | null>(null);
   const [itemInCart, setItemInCart] = useState(false);
 
-  const handleNavigation = (path: string) => {
-    navigate(path);
-  };
-
   useEffect(() => {
     window.scrollTo(0, 0);
-
-    const queryParams = new URLSearchParams(window.location.search);
-    const inventoryIdParam = queryParams.get("id");
-
-    if (inventoryIdParam) {
-      const inventoryId = parseInt(inventoryIdParam, 10);
-      const fetchedItem = InventoryData.find((invItem) => invItem.id === inventoryId);
-      
-      if (fetchedItem) {
-        setInventoryItem(fetchedItem);
-        setItemInCart(ShoppingCart.isItemInCart(fetchedItem.id));
-      } else {
-        const errorItem: InventoryItem = {
-          id: inventoryId,
-          name: "Error",
-          desc: "Item not found",
-          image_url: "sl-404.jpg",
-          price: "√-1",
-        };
-        setInventoryItem(errorItem);
-      }
+    const params = new URLSearchParams(window.location.search);
+    const id = parseInt(params.get("id") || "", 10);
+    
+    const item = InventoryData.find((item) => item.id === id);
+    if (item) {
+      setInventoryItem(item);
+      setItemInCart(ShoppingCart.isItemInCart(item.id));
     }
   }, []);
 
-  const addToCart = () => {
+  const handleAddToCart = () => {
     if (inventoryItem) {
-      ShoppingCart.addItem(inventoryItem.id);
-      setItemInCart(true);
+      if (itemInCart) {
+        ShoppingCart.removeItem(inventoryItem.id);
+        setItemInCart(false);
+      } else {
+        ShoppingCart.addItem(inventoryItem.id);
+        setItemInCart(true);
+      }
     }
   };
 
-  const removeFromCart = () => {
-    if (inventoryItem) {
-      ShoppingCart.removeItem(inventoryItem.id);
-      setItemInCart(false);
-    }
-  };
-
-  if (!inventoryItem) {
-    return <div>Loading...</div>;
-  }
+  if (!inventoryItem) return null;
 
   return (
-    <div>
+    <div className="page-container">
       <HeaderContainer />
-      <div className="inventory_item_container">
-        <div className="inventory_item_img">
-          <img src={inventoryItem.image_url} alt={inventoryItem.name} />
+      <main className="main-content">
+        <div className="inventory_item_container">
+          <Link to={ROUTES.INVENTORY} className="back_link">
+            ← Back to products
+          </Link>
+          
+          <div className="product_details">
+            <div className="product_image">
+              <img 
+                src={require(`assets/img/${inventoryItem.image_url}`).default}
+                alt={inventoryItem.name}
+                loading="eager"
+              />
+            </div>
+            
+            <div className="product_info">
+              <h1 className="product_title">{inventoryItem.name}</h1>
+              <p className="product_description">{inventoryItem.desc}</p>
+              <div className="product_price">${inventoryItem.price}</div>
+              <button 
+                className="add_to_cart"
+                onClick={handleAddToCart}
+              >
+                {itemInCart ? "Remove from cart" : "Add to cart"}
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="inventory_item_details">
-          <h2>{inventoryItem.name}</h2>
-          <p>{inventoryItem.desc}</p>
-          <div className="inventory_item_price">${inventoryItem.price}</div>
-          {itemInCart ? (
-            <Button
-              customClass="inventory_item_button"
-              label="Remove from Cart"
-              testId={`remove-from-cart-${inventoryItem.id}`}
-              onClick={removeFromCart}
-              size={BUTTON_SIZES.MEDIUM}
-              type={BUTTON_TYPES.SECONDARY}
-            />
-          ) : (
-            <Button
-              customClass="inventory_item_button"
-              label="Add to Cart"
-              testId={`add-to-cart-${inventoryItem.id}`}
-              onClick={addToCart}
-              size={BUTTON_SIZES.MEDIUM}
-              type={BUTTON_TYPES.PRIMARY}
-            />
-          )}
-          <Button
-            customClass="inventory_item_button"
-            label="Back to Products"
-            testId="back-to-products"
-            onClick={() => handleNavigation(ROUTES.INVENTORY)}
-            size={BUTTON_SIZES.MEDIUM}
-            type={BUTTON_TYPES.SECONDARY}
-          />
-        </div>
-      </div>
+      </main>
       <SwagLabsFooter />
     </div>
   );
 };
 
-export default InventoryItem;
+export default InventoryItemPage;
