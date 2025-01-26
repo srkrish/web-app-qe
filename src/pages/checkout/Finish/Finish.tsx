@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import Checkmark from "assets/img/checkmark.png";
 import SwagLabsFooter from "components/layout/Footer";
