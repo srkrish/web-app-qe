@@ -18,6 +18,7 @@ interface InventoryItem {
 const InventoryItemPage = () => {
   const [inventoryItem, setInventoryItem] = useState<InventoryItem | null>(null);
   const [itemInCart, setItemInCart] = useState(false);
+  const [imageSrc, setImageSrc] = useState<string>("");
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -28,8 +29,23 @@ const InventoryItemPage = () => {
     if (item) {
       setInventoryItem(item);
       setItemInCart(ShoppingCart.isItemInCart(item.id));
+      
+      // Load the image dynamically
+      loadImage(item.image_url);
     }
   }, []);
+
+  const loadImage = async (imagePath: string) => {
+    try {
+      // Try to dynamically import the image
+      const imageModule = await import(`assets/img/${imagePath}`);
+      setImageSrc(imageModule.default || imageModule);
+    } catch (error) {
+      console.error("Failed to load image:", error);
+      // Set a fallback image or empty string
+      setImageSrc("");
+    }
+  };
 
   const handleAddToCart = () => {
     if (inventoryItem) {
@@ -56,11 +72,15 @@ const InventoryItemPage = () => {
           
           <div className="product_details">
             <div className="product_image">
-              <img 
-                src={require(`assets/img/${inventoryItem.image_url}`).default}
-                alt={inventoryItem.name}
-                loading="eager"
-              />
+              {imageSrc ? (
+                <img 
+                  src={imageSrc}
+                  alt={inventoryItem.name}
+                  loading="eager"
+                />
+              ) : (
+                <div className="image-placeholder">Loading image...</div>
+              )}
             </div>
             
             <div className="product_info">

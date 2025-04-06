@@ -1,4 +1,4 @@
-import { useState, memo } from "react";
+import { useState, memo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ShoppingCart } from "utils/shopping-cart";
 import { isErrorUser, isProblemUser } from "utils/Credentials";
@@ -54,7 +54,25 @@ const InventoryListItem = memo(({
   price,
 }: InventoryListItemProps) => {
   const [itemInCart, setItemInCart] = useState(() => ShoppingCart.isItemInCart(id));
+  const [imageSrc, setImageSrc] = useState<string>("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Load the image when the component mounts
+    loadImage(image_url);
+  }, [image_url]);
+
+  const loadImage = async (imagePath: string) => {
+    try {
+      // Try to dynamically import the image
+      const imageModule = await import(`assets/img/${imagePath}`);
+      setImageSrc(imageModule.default || imageModule);
+    } catch (error) {
+      console.error("Failed to load image:", error);
+      // Try to load from public folder if import fails
+      setImageSrc(`${process.env.PUBLIC_URL}/assets/img/${imagePath}`);
+    }
+  };
 
   const handleNavigation = (path: string) => {
     navigate(path);
@@ -102,12 +120,16 @@ const InventoryListItem = memo(({
           }}
           data-test={`item-${id}-img-link`}
         >
-          <img
-            alt={name}
-            className="inventory_item_img"
-            src={require(`assets/img/${image_url}`).default}
-            data-test={`inventory-item-${name.replace(/\s+/g, "-").toLowerCase()}-img`}
-          />
+          {imageSrc ? (
+            <img
+              alt={name}
+              className="inventory_item_img"
+              src={imageSrc}
+              data-test={`inventory-item-${name.replace(/\s+/g, "-").toLowerCase()}-img`}
+            />
+          ) : (
+            <div className="image-placeholder">Loading...</div>
+          )}
         </a>
       </div>
       <div className="inventory_item_description" data-test="inventory-item-description">
