@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ErrorMessage from "../../components/ErrorMessage";
+import ErrorMessage from "../../components/common/ErrorMessage";
 
 export default {
   title: "SwagLabs/Form/ErrorMessage",

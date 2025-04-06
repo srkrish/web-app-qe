@@ -1,12 +1,12 @@
 import React from "react";
-import HeaderContainer from "../../components/HeaderContainer";
-import Button, { BUTTON_TYPES } from "../../components/Button";
-import StoryRouter from "storybook-react-router";
+import HeaderContainer from "../../components/layout/HeaderContainer";
+import Button, { BUTTON_TYPES } from "../../components/common/Button";
+import { withRouter } from "storybook-addon-react-router-v6";
 
 export default {
   title: "SwagLabs/Headers",
   component: HeaderContainer,
-  decorators: [StoryRouter()],
+  decorators: [withRouter],
   parameters: {
     layout: "fullscreen",
   },

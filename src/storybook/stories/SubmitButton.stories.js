@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SubmitButton from "../../components/SubmitButton";
+import SubmitButton from "../../components/forms/SubmitButton";
 
 export default {
   title: "SwagLabs/Form/Submit Button",

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Select from "../../components/Select";
+import Select from "../../components/common/Select";
 
 export default {
   title: "SwagLabs/Form/Select",

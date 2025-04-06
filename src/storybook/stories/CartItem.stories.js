@@ -1,11 +1,11 @@
 import React from "react";
-import StoryRouter from "storybook-react-router";
-import CartItem from "../../components/CartItem";
+import { withRouter } from "storybook-addon-react-router-v6"
+import CartItem from "../../components/features/cart/CartItem";
 
 export default {
   title: "SwagLabs/Swag Cart Item",
   component: CartItem,
-  decorators: [StoryRouter()],
+  decorators: [withRouter],
   parameters: {
     layout: "centered",
   },
@@ -21,7 +21,7 @@ const Template = (args) => (
 export const SwagCartItem = Template.bind({});
 SwagCartItem.args = {
   history: {
-    push: () => {},
+    push: () => { },
   },
   item: {
     id: 1,
@@ -35,7 +35,7 @@ SwagCartItem.args = {
 export const SwagCartItemNoButton = Template.bind({});
 SwagCartItemNoButton.args = {
   history: {
-    push: () => {},
+    push: () => { },
   },
   item: {
     id: 1,

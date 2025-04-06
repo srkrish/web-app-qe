@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import Button, { BUTTON_SIZES, BUTTON_TYPES } from "../../components/Button";
+import Button, { BUTTON_SIZES, BUTTON_TYPES } from "../../components/common/Button";
 
 export default {
   title: "SwagLabs/Button",

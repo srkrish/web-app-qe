@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import InputError, { INPUT_TYPES } from "../../components/InputError";
+import InputError from "../../components/forms/InputError";
+import { INPUT_TYPES } from "components/forms/types";
 
 export default {
   title: "SwagLabs/Form/Input",
