@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import {within, userEvent} from "@storybook/testing-library"
 import Button, { BUTTON_SIZES, BUTTON_TYPES } from "../../components/common/Button";
 
 export default {
@@ -25,6 +25,12 @@ Primary.args = {
   label: "Primary",
   size: BUTTON_SIZES.MEDIUM,
   type: BUTTON_TYPES.PRIMARY,
+};
+
+Primary.play = async ({ canvasElement }) => {
+  const canvas = within(canvasElement);
+  const button = await canvas.getByRole('button', { name: /Primary/i });
+  await userEvent.click(button);
 };
 
 export const Secondary = Template.bind({});
