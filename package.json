@@ -70,8 +70,8 @@
     "wdio-chromedriver-service": "^8.1.1"
   },
   "scripts": {
-    "start-18": "react-scripts start",
-    "start": "react-scripts start",
+    "start-fe": "react-scripts start",
+    "start-api": "tsx src/api/server.ts",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test.coverage": "react-scripts test --coverage --watchAll=false",

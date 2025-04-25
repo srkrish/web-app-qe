@@ -1,13 +1,13 @@
 import { CartListener } from './types';
 
 interface CartItem {
-  id: number;
+  id: string;
 }
 
 export class ShoppingCart {
   private static LISTENERS: CartListener[] = [];
 
-  static addItem(itemId: number): void {
+  static addItem(itemId: string): void {
     console.log('Adding item to cart:', itemId);
     const curContents = ShoppingCart.getCartContents();
     console.log('Current contents before add:', curContents);
@@ -19,7 +19,7 @@ export class ShoppingCart {
     }
   }
 
-  static removeItem(itemId: number): void {
+  static removeItem(itemId: string): void {
     console.log('ShoppingCart: Removing item:', itemId);
     const curContents = ShoppingCart.getCartContents();
     const updatedContents = curContents.filter(item => 
@@ -32,14 +32,14 @@ export class ShoppingCart {
     ShoppingCart.notifyListeners();
   }
 
-  static isItemInCart(itemId: number): boolean {
+  static isItemInCart(itemId: string): boolean {
     const curContents = ShoppingCart.getCartContents();
     const isIn = curContents.includes(itemId);
     console.log('Checking if item in cart:', itemId, isIn);
     return isIn;
   }
 
-  static getCartContents(): number[] {
+  static getCartContents(): string[] {
     const curContents = window.localStorage.getItem("cart-contents");
     console.log('Raw cart contents from storage:', curContents);
 
@@ -56,7 +56,7 @@ export class ShoppingCart {
     }
   }
 
-  static setCartContents(newContents: number[]): void {
+  static setCartContents(newContents: string[]): void {
     console.log('Setting cart contents:', newContents);
     window.localStorage.setItem("cart-contents", JSON.stringify(newContents));
     ShoppingCart.notifyListeners();

@@ -17,8 +17,6 @@ import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import { ROUTES } from "utils/Constants";
 import { currentUser } from "utils/Credentials";
 import { ShoppingCart } from "utils/shopping-cart";
-import { InventoryData } from "utils/InventoryData";
-import { InventoryDataLong } from "utils/InventoryDataLong";
 
 declare module 'react-dom/client' {
   export function createRoot(container: Element | null): {
@@ -43,8 +41,8 @@ const routing = (
         <Route path={ROUTES.LOGIN} element={<Login />} />
         
         <Route element={<PrivateRoute />}>
-          <Route path={ROUTES.INVENTORY} element={<Inventory data={InventoryData} />} />
-          <Route path={ROUTES.INVENTORY_LONG} element={<Inventory data={InventoryDataLong} />} />
+          <Route path={ROUTES.INVENTORY} element={<Inventory />} />
+          <Route path={ROUTES.INVENTORY_LONG} element={<Inventory />} />
           <Route path={ROUTES.INVENTORY_LIST} element={<InventoryItem />} />
           <Route path={ROUTES.CART} element={<Cart />} />
           <Route path={ROUTES.CHECKOUT_STEP_ONE} element={<CheckOutStepOne />} />

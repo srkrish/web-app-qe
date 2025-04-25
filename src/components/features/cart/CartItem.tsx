@@ -3,19 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { isProblemUser } from "utils/Credentials";
 import { ROUTES } from "utils/Constants";
 import { ShoppingCart } from "utils/shopping-cart";
+import { getProductById } from "utils/productService";
 import Button, { BUTTON_SIZES, BUTTON_TYPES } from "components/common/Button";
-import { InventoryData } from "utils/InventoryData";
 import "components/features/cart/CartItem.css";
 
 interface CartItemData {
-  id: number;
+  id: string;
   name: string;
   desc: string;
   price: number;
 }
 
 interface CartItemProps {
-  item?: CartItemData | number;
+  item?: CartItemData | string;
   showButton?: boolean;
 }
 
@@ -26,18 +26,23 @@ const CartItem: React.FC<CartItemProps> = ({ item, showButton = false }) => {
 
   useEffect(() => {
     setItemVisible(Boolean(item));
-    if (typeof item === 'number') {
-      const inventoryItem = InventoryData.find((inv: CartItemData) => inv.id === item);
-      if (inventoryItem) {
-        setItemData(inventoryItem);
-      }
+    if (typeof item === 'string') {
+      getProductById(item)
+        .then((product) => {
+          setItemData(product);
+        })
+        .catch((error) => {
+          console.error(`Error fetching product with ID ${item}:`, error);
+          setItemData(null);
+        });
     } else if (item) {
       setItemData(item);
     }
   }, [item]);
 
-  const removeFromCart = (itemId: number) => {
+  const removeFromCart = (itemId: string) => {
     console.log('CartItem: Removing item:', itemId);
+    // Convert to number if ShoppingCart.removeItem expects a number
     ShoppingCart.removeItem(itemId);
     setItemVisible(false);
   };
@@ -50,7 +55,8 @@ const CartItem: React.FC<CartItemProps> = ({ item, showButton = false }) => {
   let linkId = id;
 
   if (isProblemUser()) {
-    linkId += 1;
+    // Handle problem user case for string IDs if needed
+    // This may need additional logic for UUID strings
   }
 
   const itemLink = `${ROUTES.INVENTORY_LIST}?id=${linkId}`;

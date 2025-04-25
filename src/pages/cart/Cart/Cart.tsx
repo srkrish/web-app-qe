@@ -1,7 +1,8 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "utils/Constants";
 import { ShoppingCart } from "utils/shopping-cart";
-import { InventoryData } from "utils/InventoryData";
+import { getProductById } from "utils/productService";
 import CartItem from "components/features/cart/CartItem";
 import SwagLabsFooter from "components/layout/Footer";
 import HeaderContainer from "components/layout/HeaderContainer";
@@ -9,14 +10,60 @@ import Button, { BUTTON_SIZES, BUTTON_TYPES } from "components/common/Button";
 import "./Cart.css";
 import { isVisualUser } from "utils/Credentials";
 
+interface CartItemData {
+  id: string;
+  name: string;
+  desc: string;
+  price: number;
+}
+
 const Cart = () => {
   const navigate = useNavigate();
-  const cartItemIds = ShoppingCart.getCartContents();
-  const cartItems = cartItemIds.map(id => InventoryData.find(item => item.id === id)).filter(Boolean);
+  const [isLoading, setIsLoading] = useState(true);
+  const [cartItems, setCartItems] = useState<CartItemData[]>([]);
+  
+  useEffect(() => {
+    const loadCartItems = async () => {
+      const cartItemIds = ShoppingCart.getCartContents();
+      const itemPromises = cartItemIds.map(async (id) => {
+        try {
+          // Ensure id is passed as string to getProductById
+          return await getProductById(id.toString());
+        } catch (error) {
+          console.error(`Error fetching product with ID ${id}:`, error);
+          return null;
+        }
+      });
+      
+      const fetchedItems = await Promise.all(itemPromises);
+      setCartItems(fetchedItems.filter(Boolean) as CartItemData[]);
+      setIsLoading(false);
+    };
+    
+    loadCartItems();
+  }, []);
 
   const buttonClass = `checkout_button ${
     isVisualUser() ? "btn_visual_failure" : ""
   }`;
+
+  if (isLoading) {
+    return (
+      <div id="page_wrapper" className="page_wrapper">
+        <div id="contents_wrapper">
+          <HeaderContainer secondaryTitle="Your Cart" />
+          <div
+            id="cart_contents_container"
+            className="cart_contents_container"
+            data-test="cart-contents-container"
+          >
+            <div>Loading cart items...</div>
+          </div>
+        </div>
+        <SwagLabsFooter />
+      </div>
+    );
+  }
 
   return (
     <div id="page_wrapper" className="page_wrapper">

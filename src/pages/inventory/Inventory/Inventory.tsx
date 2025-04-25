@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import {
   isErrorUser,
   isPerformanceGlitchUser,
@@ -10,15 +10,16 @@ import SwagLabsFooter from "components/layout/Footer";
 import HeaderContainer from "components/layout/HeaderContainer";
 import { sortAsc, sortDesc, sortHiLo, sortLoHi } from "utils/Sorting";
 import Select from "components/common/Select";
-import "./Inventory.css";
 import { BacktraceClient } from "@backtrace-labs/react";
+import { getProducts } from "utils/productService";
+import "./Inventory.css";
 
 interface SortableItem {
   [key: string]: string | number;
 }
 
 interface InventoryItem {
-  id: number;
+  id: string;
   name: string;
   desc: string;
   price: number;
@@ -27,42 +28,47 @@ interface InventoryItem {
 
 type SortableInventoryItem = InventoryItem & SortableItem;
 
-interface InventoryProps {
-  data: InventoryItem[];
-}
-
 interface SortEvent {
   target: {
     value: string;
   };
 }
 
-const Inventory = ({ data }: InventoryProps) => {
-  const [inventoryList, setInventoryList] = useState<SortableInventoryItem[]>(() => sortAsc(data as SortableInventoryItem[], "name"));
+const Inventory = () => {
+  const [inventoryList, setInventoryList] = useState<SortableInventoryItem[]>([]);
   const [activeOption, setActiveOption] = useState("az");
+
+  useEffect(() => {
+    getProducts()
+      .then((data) => {
+        setInventoryList(sortAsc(data as SortableInventoryItem[], "name"));
+      })
+      .catch((error) => {
+        console.error("Error fetching products:", error);
+      });
+  }, []);
 
   const sortByOption = useCallback((event: SortEvent) => {
     if (isProblemUser()) return;
-    
+
     if (isErrorUser()) {
       BacktraceClient.instance?.send("Sorting is broken!", {
         sortOption: event.target.value,
-        data,
+        data: inventoryList,
       });
       return alert("Sorting is broken! This error has been reported to Backtrace.");
     }
 
     const newOption = event.target.value;
     setActiveOption(newOption);
-    const sortableData = data as SortableInventoryItem[];
 
     switch (newOption) {
-      case "az": setInventoryList(sortAsc(sortableData, "name")); break;
-      case "za": setInventoryList(sortDesc(sortableData, "name")); break;
-      case "hilo": setInventoryList(sortHiLo(sortableData, "price")); break;
-      case "lohi": setInventoryList(sortLoHi(sortableData, "price")); break;
+      case "az": setInventoryList(sortAsc(inventoryList, "name")); break;
+      case "za": setInventoryList(sortDesc(inventoryList, "name")); break;
+      case "hilo": setInventoryList(sortHiLo(inventoryList, "price")); break;
+      case "lohi": setInventoryList(sortLoHi(inventoryList, "price")); break;
     }
-  }, [data]);
+  }, [inventoryList]);
 
   const sortOptions = useMemo(() => [
     { key: "az", value: "Name (A to Z)" },

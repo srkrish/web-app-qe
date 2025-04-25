@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ROUTES } from "utils/Constants";
 import { ShoppingCart } from "utils/shopping-cart";
-import { InventoryData } from "utils/InventoryData";
+import { getProductById } from "utils/productService";
 import HeaderContainer from "components/layout/HeaderContainer";
 import SwagLabsFooter from "components/layout/Footer";
 import "./InventoryItem.css";
 
 interface InventoryItem {
-  id: number;
+  id: string;
   name: string;
   desc: string;
   image_url: string;
@@ -23,15 +23,18 @@ const InventoryItemPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     const params = new URLSearchParams(window.location.search);
-    const id = parseInt(params.get("id") || "", 10);
-    
-    const item = InventoryData.find((item) => item.id === id);
-    if (item) {
-      setInventoryItem(item);
-      setItemInCart(ShoppingCart.isItemInCart(item.id));
-      
-      // Load the image dynamically
-      loadImage(item.image_url);
+    const id = params.get("id");
+
+    if (id) {
+      getProductById(id)
+        .then((item) => {
+          setInventoryItem(item);
+          setItemInCart(ShoppingCart.isItemInCart(item.id));
+          loadImage(item.image_url);
+        })
+        .catch((error) => {
+          console.error("Error fetching product:", error);
+        });
     }
   }, []);
 
