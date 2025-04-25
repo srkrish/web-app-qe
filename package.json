@@ -3,6 +3,7 @@
   "homepage": "https://www.saucedemo.com",
   "version": "3.0.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@backtrace-labs/react": "^0.0.5",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
