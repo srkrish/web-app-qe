@@ -26,7 +26,7 @@ const Template = (args) => {
         {...args}
       />
       <p>
-        Your typed <strong>"{value}"</strong>.
+        Your typed <strong>&quot;{value}&quot;</strong>.
       </p>
     </>
   );

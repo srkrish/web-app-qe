@@ -33,6 +33,7 @@ const ButtonType = memo(({ id, item, itemInCart, missAlignButton, onAdd, onRemov
     />
   );
 });
+ButtonType.displayName = 'ButtonType';
 
 interface InventoryListItemProps {
   desc: string;
@@ -171,6 +172,7 @@ const InventoryListItem = memo(({
     </div>
   );
 });
+InventoryListItem.displayName = 'InventoryListItem';
 
 export type { InventoryListItemProps as Props };
 export default InventoryListItem;

@@ -1,8 +1,8 @@
 import { VALID_USERNAMES, VALID_PASSWORD, SESSION_USERNAME } from "./Constants";
-import { Credentials } from "./types";
+import { Credentials, ValidUsername } from "./types";
 
-export const verifyCredentials = (username: string, password: string): boolean => {
-  return VALID_USERNAMES.includes(username as any) && password === VALID_PASSWORD;
+export const verifyCredentials = (username: ValidUsername | string, password: string): boolean => {
+  return VALID_USERNAMES.includes(username as ValidUsername) && password === VALID_PASSWORD;
 };
 
 export const setCredentials = (username: string, password: string): void => {

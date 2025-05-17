@@ -1,0 +1,15 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Start Dev Environment",
+			"type": "shell",
+			"command": "npx concurrently \"ts-node src/api/server.ts\" \"react-scripts start\"",
+			"isBackground": true,
+			"problemMatcher": [
+				"$tsc"
+			],
+			"group": "test"
+		}
+	]
+}

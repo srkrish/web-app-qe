@@ -1,25 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, type FC } from "react";
 import { useNavigate } from "react-router-dom";
-import { isProblemUser } from "utils/Credentials";
 import { ROUTES } from "utils/Constants";
 import { ShoppingCart } from "utils/shopping-cart";
-import { getProductById } from "utils/productService";
+import { getProductById, type MappedProduct } from "utils/productService";
 import Button, { BUTTON_SIZES, BUTTON_TYPES } from "components/common/Button";
-import "components/features/cart/CartItem.css";
+import "./CartItem.css";
 
-interface CartItemData {
-  id: string;
-  name: string;
-  desc: string;
-  price: number;
-}
+type CartItemData = MappedProduct;
 
 interface CartItemProps {
-  item?: CartItemData | string;
+  item: string | CartItemData;
   showButton?: boolean;
 }
 
-const CartItem: React.FC<CartItemProps> = ({ item, showButton = false }) => {
+const CartItem: FC<CartItemProps> = ({ 
+  item, 
+  showButton = false 
+}) => {
   const navigate = useNavigate();
   const [itemVisible, setItemVisible] = useState(Boolean(item));
   const [itemData, setItemData] = useState<CartItemData | null>(null);
@@ -32,60 +29,50 @@ const CartItem: React.FC<CartItemProps> = ({ item, showButton = false }) => {
           setItemData(product);
         })
         .catch((error) => {
-          console.error(`Error fetching product with ID ${item}:`, error);
-          setItemData(null);
+          console.error('Error loading cart item:', error);
+          setItemVisible(false);
         });
-    } else if (item) {
+    } else {
       setItemData(item);
     }
   }, [item]);
-
-  const removeFromCart = (itemId: string) => {
-    console.log('CartItem: Removing item:', itemId);
-    // Convert to number if ShoppingCart.removeItem expects a number
-    ShoppingCart.removeItem(itemId);
-    setItemVisible(false);
-  };
 
   if (!itemVisible || !itemData) {
     return null;
   }
 
   const { id, name, desc, price } = itemData;
-  let linkId = id;
+  const removeFromCart = (itemId: string) => {
+    ShoppingCart.removeItem(itemId);
+    setItemVisible(false);
+  };
 
-  if (isProblemUser()) {
-    // Handle problem user case for string IDs if needed
-    // This may need additional logic for UUID strings
-  }
-
+  const linkId = typeof item === 'string' ? item : id;
   const itemLink = `${ROUTES.INVENTORY_LIST}?id=${linkId}`;
-  const testId = name ? `remove-${name.replace(/\s+/g, "-").toLowerCase()}` : `remove-${id}`;
 
   return (
-    <div className="cart_item" data-test="inventory-item">
-      <div className="cart_quantity" data-test="item-quantity">1</div>
+    <div className="cart_item" data-test="cart-item">
+      <div className="cart_quantity" />
       <div className="cart_item_label">
-        <a href="#"
-          id={`item_${id}_title_link`}
-          onClick={(evt) => {
-            evt.preventDefault();
-            navigate(itemLink);
-          }}
-          data-test={`item-${id}-title-link`}
+        <a
+          href="#"
+          id={id}
+          className="inventory_item_name"
+          onClick={() => navigate(itemLink)}
+          data-test="cart-item-link"
         >
-          <div className="inventory_item_name" data-test="inventory-item-name">{name}</div>
+          {name}
         </a>
-        <div className="inventory_item_desc" data-test="inventory-item-desc">{desc}</div>
+        <div className="inventory_item_desc">{desc}</div>
         <div className="item_pricebar">
-          <div className="inventory_item_price" data-test="inventory-item-price">${price}</div>
+          <div className="inventory_item_price">${price}</div>
           {showButton && (
             <Button
               customClass="cart_button"
               label="Remove"
-              testId={testId}
               onClick={() => removeFromCart(id)}
               size={BUTTON_SIZES.SMALL}
+              testId={`remove-${name.replace(/\s+/g, "-").toLowerCase()}`}
               type={BUTTON_TYPES.SECONDARY}
             />
           )}
@@ -94,5 +81,7 @@ const CartItem: React.FC<CartItemProps> = ({ item, showButton = false }) => {
     </div>
   );
 };
+
+CartItem.displayName = 'CartItem';
 
 export default CartItem;

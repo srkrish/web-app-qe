@@ -3,19 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { isErrorUser, isProblemUser } from "utils/Credentials";
 import { ROUTES } from "utils/Constants";
 import { ShoppingCart } from "utils/shopping-cart";
-import { getProductById } from "utils/productService";
+import { getProductById, type MappedProduct } from "utils/productService";
 import CartItem from "components/features/cart/CartItem";
 import SwagLabsFooter from "components/layout/Footer";
 import HeaderContainer from "components/layout/HeaderContainer";
 import Button, { BUTTON_SIZES, BUTTON_TYPES } from "components/common/Button";
 import "./CheckOutStepTwo.css";
 
-interface CartItemData {
-  id: string;
-  name: string;
-  desc: string;
-  price: number;
-}
+type CartItemData = MappedProduct;
 
 const CheckOutStepTwo = () => {
   const navigate = useNavigate();
